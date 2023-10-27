@@ -1,0 +1,27 @@
+<h3 mat-dialog-title>Upload File(s)</h3>
+<ng-container *ngIf="status == 'incomplete'; else complete">
+    <mat-dialog-content>
+        <div  *ngFor="let file of selectedFiles; let i = index;">
+            <div style='display: inline-block;' class='file-name'>{{file.name}}</div>
+            <i (click)="selectedFiles.splice(i,1)" style='padding:2px;cursor: pointer' class="fas fa-times" aria-hidden="true"></i>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <ng-container *ngIf="selectedFiles.length == 0; else other">
+            <input [hidden]="true" (change)="onFileSelect($event)" (click)="fileSelect.value = ''" multiple type="file" accept="text/x-python-script" #fileSelect>
+            <button matSuffix mat-button (click)="fileSelect.click();" style="background-color: #3f51b5; color: white;">Choose File(s)</button> 
+        </ng-container>
+        <ng-template #other>
+            <button mat-button (click)="uploadFiles()">Upload</button>
+        </ng-template>
+      
+      <button mat-button mat-dialog-close>Cancel</button>
+    </mat-dialog-actions>
+</ng-container>
+
+<ng-template #complete>
+    <mat-dialog-content>{{status}}</mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close>Okay</button>
+    </mat-dialog-actions>
+</ng-template>

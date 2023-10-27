@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  {{data.message}}
+</div>
+<div style="float:right; margin:22px 0px 0px 0px;">
+  <input class="setTimeButton" style="margin:0px 15px;" type="button" value="Confirm" [mat-dialog-close]="true">
+  <input class="setTimeButton" type="button" value="Cancel"  [mat-dialog-close]="false">
+</div>

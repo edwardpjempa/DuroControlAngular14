@@ -1,0 +1,311 @@
+<div [style.display]="enableViewSearch ? 'initial' : 'none'">
+    <mat-form-field style="padding-right: 12px; padding-left: 12px; width: -webkit-fill-available; padding-top: 10px;">
+        <mat-label>Filter</mat-label>
+        <input #input id="viewFilter" matInput placeholder="View Name or Id" (keyup)="filter(input)">
+    </mat-form-field>
+</div>
+
+<cdk-virtual-scroll-viewport itemSize="32" minBufferPx="100" maxBufferPx="300" [style.height.px]="virtualScrollHeight">
+    <ng-container *cdkVirtualFor="let node of dataSource">
+
+        <div *ngIf="node.type === 'view'" style="min-height: 48px; display: flex; align-items: center;">
+            <div style="width: 100%;">
+                <div [style.padding-left]="getLevel(node) * 20 + 'px'" [ngClass]="{'drop-above': dragNodeExpandOverArea === 'above' && dragNodeExpandOverNode === node,
+                    'drop-below': dragNodeExpandOverArea === 'below' && dragNodeExpandOverNode === node,
+                    'drop-center': dragNodeExpandOverArea === 'center' && dragNodeExpandOverNode === node}"
+                    draggable="true" (dragstart)="handleDragStart($event, node);" (dragover)="handleDragOver($event, node);"
+                    (drop)="handleDrop($event, node);" (dragend)="handleDragEnd($event);" 
+                    (click)="onSelectView.emit(node.id); sidenavResize()" [ngClass]="{'leftbar-item-active': currentView && currentView.id === node.id}" class="leftbar-item mycursor-pointer view-tree-node">
+
+                    <div style="display: flex;">
+                        <!--Preview-->
+                        <i class="fad fa-window" *ngIf="node.type ==='view'" style="padding-left: 13px; padding-right: 13px; padding-top: 4px; padding-bottom: 4px; font-size: larger;">
+                        <!--<i class="fad fa-window" *ngIf="node.type ==='view'" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                            (mouseenter)="openPreview(menuTrigger, node);" (mouseleave)="clearTimer(); " style="padding-left: 13px; padding-right: 13px; padding-top: 4px; padding-bottom: 4px; font-size: larger;">-->
+                            
+                            <!--<mat-menu #menu="matMenu" direction="down" yPosition="below" [overlapTrigger]="false">
+                                
+                                <div *ngIf="previewTimeout" (mouseenter)="recheckIfInPreview = true;" (mouseleave)="closePreview(menuTrigger);">
+
+                                    <div style="width: 200px; height: 130px; display: flex; align-items: center; justify-content: center;">
+
+                                        <div [style.transform]="previewData['scale']" >
+                                            <app-hmi-c-view [viewInfo]="previewData['view']" [style.width.px]="previewData['view'].config.width" [style.height.px]="previewData['view'].config.height" style="display: flex;"></app-hmi-c-view>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-menu>-->
+                        </i>
+
+                        <div #nameDiv style="display: flex;" [style.max-width.px]="nameDiv.style.width">
+                            <div style="width: 100%; display: flex; align-items: center;">
+                                <div style="display: flex; padding-left: 6px; padding-right: 6px;" [style.max-width.px]="269-(getLevel(node)*20)-40.41-12-34">
+                                    <span *ngIf="!node.onEdit" [matTooltip]="node.id" [matTooltipShowDelay]="1000" (dblclick)="onViewRename(node, inputRename)" 
+                                        style="float: inherit; padding-left: unset; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 14px;">
+                                        {{node.name}}
+                                    </span>
+                                </div>
+                                <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                                    (blur)="node.onEdit = false; onRenameView2(node); onEdit(false,false);" (keydown.enter)="inputRename.blur();" (focus)="onEdit(true,false);"
+                                    [style.max-width.px]="269-(getLevel(node)*20)-40.41-12-34-12">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                            <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview" style="display: flex; justify-content: center; align-items: center;">
+                                <i class="fal fa-ellipsis-v-alt"></i>
+                            </mat-icon>
+                        </div>
+                    </div>
+
+                    <mat-menu #menuview="matMenu" class="leftbar-item-menu">
+                        <button mat-menu-item (click)="onDeleteView(node)">
+                            <i class="fad fa-trash-alt"></i>
+                            <span style="padding-left: 12px;">Delete</span>
+                        </button>
+                        <button mat-menu-item (click)="onRenameView(node)">
+                            <i class="fad fa-edit"></i>
+                            <span style="padding-left: 12px;">Rename</span>
+                        </button>
+                        <button mat-menu-item (click)="onPropertyView.emit(node.id)">
+                            <i class="fad fa-sliders-h"></i>
+                            <span style="padding-left: 12px;">Properties</span>
+                        </button>
+                        <button mat-menu-item (click)="onCloneView.emit(node.id)">
+                            <i class="fad fa-clone"></i>
+                            <span style="padding-left: 12px;">Clone</span>
+                        </button>
+                        <button mat-menu-item (click)="eservice.onExportView(node.id, hmi)">
+                            <i class="fad fa-file-export"></i>
+                            <span style="padding-left: 12px;">Export</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="node.type === 'folder'">
+
+            <div [style.padding-left]="getLevel(node) * 20 + 'px'" style="display: flex;" >
+                <button mat-icon-button (click)="treeControl.toggle(node); onClickDect.emit();">
+                    <i class="fad fa-folder-open" style="font-size: larger;" *ngIf="treeControl.isExpanded(node)"></i>  
+                    <i class="fad fa-folder" style="font-size: larger;" *ngIf="!treeControl.isExpanded(node)"></i> 
+                </button>
+                <div style="align-items: center; display: flex; width: 100%;" [style.max-width.px]="269-(getLevel(node)*20)-40">
+                    <div class="leftbar-item mycursor-pointer" [ngClass]="{'drop-above': dragNodeExpandOverArea === 'above' && dragNodeExpandOverNode === node,
+                            'drop-below': dragNodeExpandOverArea === 'below' && dragNodeExpandOverNode === node,
+                            'drop-center': dragNodeExpandOverArea === 'center' && dragNodeExpandOverNode === node}"
+                        draggable="true" (dragstart)="handleDragStart($event, node);" (dragover)="handleDragOver($event, node);"
+                        (drop)="handleDrop($event, node);" (dragend)="handleDragEnd($event);">
+            
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 100%;">
+            
+                                    <div style="display: flex; padding-left: 6px; padding-right: 6px;" [style.max-width.px]="269-(getLevel(node)*20)-40-34-12">
+                                        <span *ngIf="!node.onEdit" (dblclick)="onViewRename(node, inputRename)" 
+                                            style="float: inherit; padding-left: unset; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 14px;">
+                                            {{node.name}}
+                                        </span>
+                                    </div>
+            
+                                    <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                                        (blur)="node.onEdit = false; onRenameView2(node);" (keydown.enter)="inputRename.blur();" [style.max-width.px]="269-(getLevel(node)*20)-40-34-12">
+                                </div>
+                            </div>
+            
+                            <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                                <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview_1" style="display: flex; justify-content: center; align-items: center;">
+                                    <i class="fad fa-ellipsis-v-alt"></i>
+                                </mat-icon>
+                            </div>
+                        </div>
+            
+                        <mat-menu #menuview_1="matMenu" class="leftbar-item-menu">
+                            <button mat-menu-item (click)="onDeleteFolder(node)">
+                                <i class="fad fa-trash-alt"></i>
+                                <span style="padding-left: 12px;">Delete</span>
+                            </button>
+                            <button mat-menu-item (click)="onRenameFolder(node)">
+                                <i class="fad fa-edit"></i>
+                                <span style="padding-left: 12px;">Rename</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+</cdk-virtual-scroll-viewport>
+
+<span #emptyItem></span>
+
+<!--
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+	<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="20">
+	
+		<div [ngClass]="{'drop-above': dragNodeExpandOverArea === 'above' && dragNodeExpandOverNode === node,
+                'drop-below': dragNodeExpandOverArea === 'below' && dragNodeExpandOverNode === node,
+                'drop-center': dragNodeExpandOverArea === 'center' && dragNodeExpandOverNode === node}"
+			draggable="true" (dragstart)="handleDragStart($event, node);" (dragover)="handleDragOver($event, node);"
+            (drop)="handleDrop($event, node);" (dragend)="handleDragEnd($event);" 
+            (click)="onSelectView.emit(node.id)" [ngClass]="{'leftbar-item-active': currentView && currentView.id === node.id}" class="leftbar-item mycursor-pointer">
+
+            <div style="display: flex;">
+                <i class="fad fa-window" *ngIf="node.type ==='view'" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                    (mouseenter)="openPreview(menuTrigger, node);" (mouseleave)="clearTimer(); " style="padding-left: 13px; padding-right: 13px; padding-top: 4px; padding-bottom: 4px;">
+                    <mat-menu #menu="matMenu" direction="down" yPosition="below" [overlapTrigger]="false">
+                        
+                        <div *ngIf="previewTimeout" (mouseenter)="recheckIfInPreview = true;" (mouseleave)="closePreview(menuTrigger);">
+
+                            <div style="width: 200px; height: 130px; display: flex; align-items: center; justify-content: center;">
+
+                                <div [style.transform]="previewData['scale']" >
+                                    <app-hmi-c-view [viewInfo]="previewData['view']" [style.width.px]="previewData['view'].config.width" [style.height.px]="previewData['view'].config.height" style="display: flex;"></app-hmi-c-view>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-menu>
+                </i>
+
+                <div style="display: flex;">
+                    <div style="width: 100%;">
+                        <div style="display: flex; max-width: 180px; padding-left: 6px; padding-right: 6px;">
+                            <span *ngIf="!node.onEdit" [matTooltip]="node.id" [matTooltipShowDelay]="1000" (dblclick)="onViewRename(node, inputRename)" 
+                                style="float: inherit; padding-left: unset; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                {{node.name}}
+                            </span>
+                        </div>
+                        <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                            (blur)="node.onEdit = false; onRenameView2(node); onEdit(false,false);" (keydown.enter)="$event.target.blur();" (focus)="onEdit(true,false);">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                    <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview" style="display: flex; justify-content: center;">
+                        <i class="fal fa-ellipsis-v-alt"></i>
+                    </mat-icon>
+                </div>
+            </div>
+
+            <!--<div style="display: contents;">
+                <i class="fad fa-window" *ngIf="node.type ==='view'" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                    (mouseenter)="openPreview(menuTrigger, node);" (mouseleave)="clearTimer(); " style="padding-left: 13px; padding-right: 13px;">
+                    <mat-menu #menu="matMenu" direction="down" yPosition="below" [overlapTrigger]="false">
+                        
+                        <div *ngIf="previewTimeout" (mouseenter)="recheckIfInPreview = true;" (mouseleave)="closePreview(menuTrigger);">
+
+                            <div style="width: 200px; height: 130px; display: flex; align-items: center; justify-content: center;">
+
+                                <div [style.transform]="previewData['scale']" >
+                                    <app-hmi-c-view [viewInfo]="previewData['view']" [style.width.px]="previewData['view'].config.width" [style.height.px]="previewData['view'].config.height" style="display: flex;"></app-hmi-c-view>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-menu>
+                </i>
+
+                <span *ngIf="!node.onEdit" [matTooltip]="node.id" [matTooltipShowDelay]="1000" (dblclick)="onViewRename(node, inputRename)" style="float: inherit; padding-left: unset;">
+                    {{node.name}}
+                </span>
+                <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" (blur)="node.onEdit = false; onRenameView2(node);" (keydown.enter)="$event.target.blur(); onRenameView2(node);">
+                
+                <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview" >
+                    <i class="fal fa-ellipsis-v-alt"></i>
+                </mat-icon>
+            </div>--
+            
+    
+            <mat-menu #menuview="matMenu" class="leftbar-item-menu">
+                <button mat-menu-item (click)="onDeleteView(node)">
+                    <i class="fad fa-trash-alt"></i>
+                    <span style="padding-left: 12px;">Delete</span>
+                </button>
+                <button mat-menu-item (click)="onRenameView(node)">
+                    <i class="fad fa-edit"></i>
+                    <span style="padding-left: 12px;">Rename</span>
+                </button>
+                <button mat-menu-item (click)="onPropertyView.emit(node.id)">
+                    <i class="fad fa-sliders-h"></i>
+                    <span style="padding-left: 12px;">Properties</span>
+                </button>
+                <button mat-menu-item (click)="onCloneView.emit(node.id)">
+                    <i class="fad fa-clone"></i>
+                    <span style="padding-left: 12px;">Clone</span>
+                </button>
+                <button mat-menu-item (click)="eservice.onExportView(node.id, hmi)">
+                    <i class="fad fa-file-export"></i>
+                    <span style="padding-left: 12px;">Export</span>
+                </button>
+            </mat-menu>
+        </div>
+	</mat-tree-node>
+
+	<mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+		
+	</mat-tree-node>
+
+	<mat-tree-node *matTreeNodeDef="let node; when: isFolder" matTreeNodePadding matTreeNodePaddingIndent="20">
+		<button mat-icon-button matTreeNodeToggle (click)="onClickDect.emit();">
+            <i class="fad fa-folder-open" *ngIf="treeControl.isExpanded(node)"></i>  
+            <i class="fad fa-folder" *ngIf="!treeControl.isExpanded(node)"></i> 
+        </button>
+		<div class="leftbar-item mycursor-pointer" [ngClass]="{'drop-above': dragNodeExpandOverArea === 'above' && dragNodeExpandOverNode === node,
+                'drop-below': dragNodeExpandOverArea === 'below' && dragNodeExpandOverNode === node,
+                'drop-center': dragNodeExpandOverArea === 'center' && dragNodeExpandOverNode === node}"
+			draggable="true" (dragstart)="handleDragStart($event, node);" (dragover)="handleDragOver($event, node);"
+            (drop)="handleDrop($event, node);" (dragend)="handleDragEnd($event);">
+
+            <div style="display: flex;">
+                <div style="display: flex;">
+                    <div style="width: 100%;">
+
+                        <div style="display: flex; max-width: 160px; padding-left: 6px; padding-right: 6px;">
+                            <span *ngIf="!node.onEdit" (dblclick)="onViewRename(node, inputRename)" 
+                                style="float: inherit; padding-left: unset; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                {{node.name}}
+                            </span>
+                        </div>
+
+                        <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                            (blur)="node.onEdit = false; onRenameView2(node);" (keydown.enter)="$event.target.blur();">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                    <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview_1" style="display: flex; justify-content: center;">
+                        <i class="fad fa-ellipsis-v-alt"></i>
+                    </mat-icon>
+                </div>
+            </div>
+
+            <!--<i class="fad fa-window" *ngIf="node.type ==='view' && !node.onEdit" (dblclick)="node.onEdit = true" style="padding-right: 10px;"></i>{{node.name}}-->
+
+            <!--<span *ngIf="!node.onEdit" (dblclick)="onViewRename(node, inputRename)" style="padding-left: unset;">
+                {{node.name}}
+            </span>
+
+            <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" (blur)="node.onEdit = false; onRenameView2(node);" (keydown.enter)="$event.target.blur(); onRenameView2(node);">
+
+            <mat-icon matTooltip="More" [matMenuTriggerFor]="menuview_1" >
+                <i class="fad fa-ellipsis-v-alt"></i>
+            </mat-icon>--
+
+            <mat-menu #menuview_1="matMenu" class="leftbar-item-menu">
+                <button mat-menu-item (click)="onDeleteFolder(node)">
+                    <i class="fad fa-trash-alt"></i>
+                    <span style="padding-left: 12px;">Delete</span>
+                </button>
+                <button mat-menu-item (click)="onRenameFolder(node)">
+                    <i class="fad fa-edit"></i>
+                    <span style="padding-left: 12px;">Rename</span>
+                </button>
+            </mat-menu>
+        </div>
+		
+	</mat-tree-node>
+</mat-tree>
+
+<span #emptyItem></span>-->

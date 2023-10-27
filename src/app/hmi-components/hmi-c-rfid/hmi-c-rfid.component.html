@@ -1,0 +1,22 @@
+<div style="padding: 3px; width: 230px;" [style.transform]="transform" [ngStyle]="config.style">
+    
+    <div style="display: flex; justify-content: center; align-items: center;padding-top: 20px;padding-bottom: 20px;">
+        <img [ngStyle]="config.style" style="object-fit: contain; width: 80%; height: 80%;"
+            
+            [src]="rfid_state==0 ? '/assets/images/rfid_static.png': rfid_state==1? '/assets/images/rfid_invalid.png':rfid_state==2? '/assets/images/rfid_valid.png':'/assets/images/rfid_static.png'">
+
+            <!--<i class="fad fa-signal-stream" style="font-size: xxx-large;"></i>-->
+    </div>
+
+    <div>
+        <div style="display: flex; justify-content: center; padding-bottom: 10px;">
+            <span style="font-weight: bold;">UUID: </span>
+            <span> 00 00 00 00</span>
+        </div>
+
+        <div style="display: flex; justify-content: center; padding-top: 10px;">
+            <span style="font-weight: bold;">TIME: </span>
+            <span> 03/07/2022, 1:55 AM</span>
+        </div>
+    </div>
+</div>

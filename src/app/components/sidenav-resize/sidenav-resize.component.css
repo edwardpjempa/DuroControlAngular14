@@ -1,0 +1,22 @@
+.main {
+   /* width: 300px; */
+   display: flex;
+   flex-direction: row;
+   height: 100%;
+   
+}
+
+.handler {
+   flex: 1;
+   width: 10px;
+   min-width: 10px;
+   /* background-color: chartreuse; */
+   flex-grow: 0;
+   margin-left: -5px;
+   cursor: col-resize;
+}
+
+.content {
+   flex-grow: 1;
+
+}

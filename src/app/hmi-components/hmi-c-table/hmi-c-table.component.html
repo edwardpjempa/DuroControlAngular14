@@ -1,0 +1,10 @@
+<table mat-table #table [ngStyle]="config.style" [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+  <ng-container #container *ngFor="let col of columns" [matColumnDef]="col">
+    <th  mat-header-cell *matHeaderCellDef style="text-align: center; padding: 0; "[ngStyle]="{'color': config.style['headerFontColor']}"> <span>{{ col }}</span> </th>
+    <td [ngStyle]="config.style" *matCellDef="let element"><div style="word-break: break-all;">{{element[col]}}</div></td>
+    <td [ngStyle]="{'border-bottom': '2px solid black',
+    'border-top': '2px solid black', 'border-right': 'none', 'border-left': 'none'}" *matCellDef="let element"><div style="word-break: break-all;">{{element[col]}}</div></td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columns" [ngStyle]="{'height.px': config.style['headerRowHeight.px'], 'color': config.style['headerFontColor']}"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>

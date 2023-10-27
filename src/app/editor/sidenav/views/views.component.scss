@@ -1,0 +1,78 @@
+.drop-above {
+    border-top: 10px solid #dddddd;
+    margin-top: -10px;
+}
+
+.drop-below {
+    border-bottom: 10px solid #dddddd;
+    margin-bottom: -10px;
+}
+
+.drop-center {
+    background-color: #dddddd;
+}
+
+
+/* --------------- */
+/* left panel */
+/* --------------- */
+.leftbar-item {
+    padding: 3px 0px 1px 0px;
+    display: flow-root;
+    width: 100%;
+}
+
+.leftbar-item-active {
+    /* font-weight: 600; */
+    background-color: rgba(48,89,175,1);  
+    color: rgba(255,255,255,1);  
+}
+  
+.leftbar-item span {
+    padding-left: 15px;    
+    float: left;
+}
+
+.leftbar-item mat-icon {
+    float: right;
+    font-size: 18px;
+    /* color: rgba(0, 0, 0, 0.4); */
+}
+/* --------------- */
+
+
+
+.inputField .mat-form-field-wrapper {
+    padding-bottom: 2px !important;
+}
+
+.inputField .mat-form-field-underline {
+    bottom: 1px;
+}
+
+.mat-menu-panel{
+    //min-height: unset !important;
+
+    height: auto;
+    width: auto;
+    display: flex;
+    //padding: 10px;
+    padding: 5px;
+}
+
+.mat-menu-content:not(:empty) {
+    padding-top: unset;
+    padding-bottom: unset;
+}
+
+.view-tree-node {
+    min-height: auto !important;
+    height: 28px;
+    width: auto;
+}
+
+.folder-tree-node {
+    min-height: auto !important;
+    height: 28px;
+    width: auto;
+}

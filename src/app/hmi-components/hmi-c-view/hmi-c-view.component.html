@@ -1,0 +1,71 @@
+<div class="main-div" [style.width.px]="0" [style.height.px]="0" 
+   [style.transform]="(viewInfo.config.sizeMode=='zoom')?'scale(' + scaleX + ',' + scaleY + ')':'scale(1.0,1.0)'" 
+    style="position: absolute; max-width: inherit; max-height: inherit;"
+   >
+
+    <div [id]="component.id"  class="component" *ngFor="let component of viewInfo.components;"
+       [style.top.px]="component.y"
+       [style.left.px]="component.x"
+       [style.width.px]="component.w"
+       [style.height.px]="component.h"
+       [style.max-width.px]="component.w"
+       [style.max-height.px]="component.h"
+       [style.zIndex]="component.zIndex"
+       [style.transform]="'rotate('+component.rotationAngle+'deg)'">
+       <app-hmi-c-table *ngIf="component.type == 'table' && component.visibility" [config]="component.config" [animationdata]="component.animation" style="min-height: min-content;" ></app-hmi-c-table>
+       <app-hmi-c-dropdown *ngIf="component.type == 'dropdown' && component.visibility" [config]="component.config" [animationdata]="component.animation" [options]="component.options"></app-hmi-c-dropdown>
+       <app-hmi-c-image class="app-hmi-c-image" *ngIf="component.type == 'image' && component.visibility" [config]="component.config"></app-hmi-c-image>
+       <app-hmi-c-button *ngIf="component.type == 'button' && component.visibility" [config]="component.config" [animationdata]="component.animation"></app-hmi-c-button>
+       <app-hmi-c-slider *ngIf="component.type == 'slider' && component.visibility" [config]="component.config" [animationdata]="component.animation"></app-hmi-c-slider>
+       <app-hmi-c-label class="app-hmi-c-label" *ngIf="component.type == 'label' && component.visibility" [config]="component.config" [animationdata]="component.animation"></app-hmi-c-label>
+       <app-hmi-c-level *ngIf="component.type == 'level' && component.visibility" [config]="component.config" [animationdata]="component.animation"></app-hmi-c-level>
+       <app-hmi-c-view class="app-hmi-c-view" *ngIf="component.type == 'view' && component.visibility" [ngStyle]="views()[component.viewId].config.style"
+            [scaleX]="component.w / views()[component.viewId].config.width" [scaleY]="component.h / views()[component.viewId].config.height" 
+            [viewInfo]="views()[component.viewId]">
+        </app-hmi-c-view>
+        <app-hmi-c-numeric-input class="app-hmi-c-numeric-input" *ngIf="component.type == 'numericInput' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [transform]="'scale('+component.w/100+','+ component.h/206  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h">
+        </app-hmi-c-numeric-input>
+        <app-hmi-c-keyboard class="app-hmi-c-keyboard" *ngIf="component.type == 'keyboard' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [style.transform]="'scale('+component.w/390+','+ component.h/211  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h">
+        </app-hmi-c-keyboard>
+        <app-hmi-c-rfid class="app-hmi-c-rfid" *ngIf="component.type == 'rfid' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [transform]="'scale('+component.w/230+','+ component.h/350  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h">
+        </app-hmi-c-rfid>
+        <app-hmi-c-camera class="app-hmi-c-camera" *ngIf="component.type == 'camera' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [transform]="'scale('+component.w/230+','+ component.h/350  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h">
+        </app-hmi-c-camera>
+        <app-hmi-c-line-chart class="app-hmi-c-line-chart" *ngIf="component.type == 'lineChart' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [transform]="'scale('+component.w/230+','+ component.h/350  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h"
+            [style.display]="'flex'" [id]="component.id">
+        </app-hmi-c-line-chart>
+        <app-hmi-c-bar-chart class="app-hmi-c-bar-chart" *ngIf="component.type == 'barChart' && component.visibility" [config]="component.config" [animationdata]="component.animation"
+            [transform]="'scale('+component.w/230+','+ component.h/350  + ')'"
+            [style.width.px]="component.w"
+            [style.height.px]="component.h"
+            [style.max-width.px]="component.w"
+            [style.max-height.px]="component.h"
+            [style.display]="'flex'" [id]="component.id">
+        </app-hmi-c-bar-chart>
+    </div>
+</div>

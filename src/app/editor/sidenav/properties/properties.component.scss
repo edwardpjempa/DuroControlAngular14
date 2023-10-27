@@ -1,0 +1,137 @@
+/* Structure */
+table {
+    width: 100%;
+}
+
+.mat-table {
+    mat-row, mat-header-row, mat-footer-row {
+      padding-left: 8px;
+      padding-right: 8px;
+      height: 14px !important;
+    }
+
+    mat-cell:first-child, mat-footer-cell:first-child, mat-header-cell:first-child {
+      padding-left: 0;
+    }
+
+    mat-cell:last-child, mat-footer-cell:last-child, mat-header-cell:last-child {
+      padding-right: 0;
+    }
+}
+
+.inputField_prop .mat-form-field-wrapper {
+    padding-bottom: 2px !important;
+}
+.inputField_prop .mat-form-field-underline {
+    bottom: 1px;
+}
+.inputField_prop .mat-form-field-infix{
+    border-top:.84375em solid transparent;
+}
+
+.selectField_prop .mat-form-field-wrapper {
+    padding-bottom: 2px !important;
+}
+.selectField_prop .mat-form-field-underline {
+    bottom: 1px;
+}
+.selectField_prop .mat-form-field-infix{
+    border-top:.84375em solid transparent;
+}
+
+.imgField_prop .mat-form-field-wrapper {
+    padding-bottom: 2px !important;
+}
+.imgField_prop .mat-form-field-underline {
+    bottom: 1px;
+}
+.imgField_prop .mat-form-field-infix{
+    border-top:.84375em solid transparent;
+}
+
+.params .mat-form-field {
+    font-size: 14px;
+    //width: 100%;
+    width: 107px;
+}
+
+.paramss .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-column-name {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    //flex: 0 0 45% !important;
+    //width: 10% !important;
+    //overflow-wrap: break-word;
+    //word-wrap: break-word;
+  
+    word-break: break-word;
+}
+
+.mat-column-parameter {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    //flex: 0 0 45% !important;
+    //width: 10% !important;
+    //overflow-wrap: break-word;
+    //word-wrap: break-word;
+  
+    word-break: break-word;
+
+    flex: 19%;
+}
+
+.alignment{
+
+    button{
+        width: 34px;
+        min-width: 34px;
+        padding-left: unset;
+        padding-right: unset;
+    }
+}
+
+.align-button-active {
+    background-color: rgba(48,89,175,1);  
+    color: rgba(255,255,255,1);  
+}
+
+.mat-menu-content:not(:empty) {
+    padding-top: unset;
+    padding-bottom: unset;
+}
+
+.mat-menu-panel{
+    min-height: unset;
+}
+
+.imageManager-container .mat-dialog-container {
+    padding: 5px
+}
+
+.tabs .mat-tab-label {
+  height: 32px !important;
+  min-height: 5px!important;
+  margin: 3px!important;
+  width: 76px!important;
+  min-width: 5px!important;
+}
+
+.mat-tooltip {
+    /* your own custom styles here */ 
+    /* e.g. */
+    font-size: 14px;
+    max-width: unset !important;
+
+}
+
+.input-color-backgd{
+    margin: 1px;
+}
+
+.propertiesFunctionModal  .mat-dialog-container{
+    padding: 12px;
+}

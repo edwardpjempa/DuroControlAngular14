@@ -1,0 +1,165 @@
+<div *ngIf="config" style="margin-left: 5px; min-width: 350px" id="mainn">
+   <div style="display: flex; flex-wrap: wrap; width:56%; justify-content:flex-start;"> 
+      <mat-form-field style="height: 54px; flex: 0 35%">
+      <mat-label>Host</mat-label>
+      <input matInput [(ngModel)]="config.host" />
+   </mat-form-field>
+   <mat-form-field style="margin-left: 10px; height: 54px; flex: 0 15%; width: 60px;">
+      <mat-label>Port</mat-label>
+      <input type="number" matInput [(ngModel)]="config.port" />
+   </mat-form-field>
+   </div>
+   <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+      <mat-form-field style="flex: 0 24%;">
+         <mat-label>Status Tag <span style="float: right;" id="statusTagValue"></span></mat-label>
+         <input matInput [(ngModel)]="config.statusTag" />
+      </mat-form-field>
+      <mat-form-field style="flex: 0 24%;">
+         <mat-label>Message Ok Counter Tag <span style="float: right;" id="msgsOkCount"></span></mat-label>
+         <input matInput [(ngModel)]="config.msgsOk" />
+      </mat-form-field>
+      <mat-form-field style="flex: 0 24%;">
+         <mat-label>Message Error Counter Tag <span style="float: right;" id="msgsErrCount"></span></mat-label>
+         <input matInput [(ngModel)]="config.msgsErr" />
+      </mat-form-field>
+      <mat-form-field style="flex: 0 24%;">
+         <mat-label>Problem Tag </mat-label>
+         <input matInput [(ngModel)]="config.problemTag" style="width:88%;"/>
+         <i class="fal fa-info-circle" matTooltip="Problem Tag shows what is causing errors"></i>
+      </mat-form-field>
+   </div>
+</div>
+<div #blah class="modbus-container">
+   <div style="grid-row: 1; grid-column: 1;">
+      <button mat-button (click)="addMapping()">Add Row</button>
+      <button
+         mat-button
+         *ngIf="selection.selected.length != 0"
+         (click)="deleteSelected()">
+         Delete
+      </button>
+   </div>
+   <table *ngIf="config != undefined"
+      mat-table
+      [dataSource]="config.mappings"
+      class="mat-elevation-z8 tablee" style="width: 100%;">
+      <ng-container matColumnDef="select" >
+         <th mat-header-cell *matHeaderCellDef style="padding-left: 15px; padding-right: 5px;">
+            <mat-checkbox
+               (change)="$event ? masterToggle() : null"
+               [checked]="selection.hasValue() && isAllSelected()"
+               [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+         </th>
+         <td mat-cell *matCellDef="let row"  style=" padding-left: 15px; padding-right: 5px;">
+            <mat-checkbox
+               (click)="$event.stopPropagation()"
+               (change)="$event ? selection.toggle(row) : null"
+               [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="slaveId" style="width: 60px;">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 60px;">Slave Id</th>
+         <td mat-cell *matCellDef="let element" style="width: 60px; text-align: center;">
+            <mat-form-field class="slaveIdMatField" style="width: 50px; margin-left: 5px; margin-right: 5px;">
+               <input type="number" matInput [(ngModel)]="element.slaveId" />
+            </mat-form-field>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="startRegister">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center;">Start Register</th>
+         <td mat-cell *matCellDef="let element" style="text-align: center;">
+            <mat-form-field class="startRegisterMatField" style="max-width: 85px; min-width: 70%">
+               <input
+                  matInput
+                  type="number"
+                  min="0"
+                  [(ngModel)]="element.startRegister"
+               />
+            </mat-form-field>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="registerType">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center;">Register Type</th>
+         <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+            <mat-form-field class="registerTypeMatField" style="max-width: 120px; min-width: 78%;">
+               <mat-select
+                  [(value)]="element.regType"
+                  (selectionChange)="regTypeChanged($event, i)">
+                  <mat-option
+                     *ngFor="let registerType of registerTypes"
+                     [value]="registerType.value"
+                     >{{ registerType.display }}</mat-option>
+               </mat-select>
+            </mat-form-field>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="dataType">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center;">Data Type</th>
+         <td mat-cell *matCellDef="let element" style="text-align: center;">
+            <mat-form-field class="dataTypeMatField" style="max-width: 75px; min-width: 80%;">
+               <mat-select [(value)]="element.dataType">
+                  <mat-option
+                     *ngFor="let dataType of dataTypes[element.regType]"
+                     [value]="dataType"
+                     >{{ dataType }}</mat-option> 
+               </mat-select>
+            </mat-form-field>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="enable">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center;">Enable</th>
+         <td mat-cell *matCellDef="let element" style="text-align: center;">
+            <mat-form-field class="enableMatField" style="max-width: 100px; min-width: 70%">
+               <mat-select [(value)]="element.enable">
+                  <mat-option
+                     *ngFor="let enable of enableOptions"
+                     [value]="enable"
+                     >{{ enable }}</mat-option>
+               </mat-select>
+            </mat-form-field>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="tags">
+         <th mat-header-cell *matHeaderCellDef style="text-align: center;">Mappings</th>
+         <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+            <button
+               mat-button
+               #trigger
+               (click)="openMappingDialog(trigger, element)"
+               type="button">
+               Edit
+            </button>
+         </td>
+      </ng-container>
+      <tr
+         mat-header-row
+         *matHeaderRowDef="[
+            'select',
+            'slaveId',
+            'startRegister',
+            'registerType',
+            'dataType',
+            'enable',
+            'tags'
+         ]"
+      ></tr>
+      <tr
+         mat-row
+         *matRowDef="
+            let row;
+            columns: [
+               'select',
+               'slaveId',
+               'startRegister',
+               'registerType',
+               'dataType',
+               'enable',
+               'tags'
+            ];
+            let i = index
+         "
+         [ngClass]="{ highlightTableColor: problemRow == i }"></tr>
+   </table>
+</div>

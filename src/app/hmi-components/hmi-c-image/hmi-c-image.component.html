@@ -1,0 +1,14 @@
+<img [ngStyle]="config.style"
+[ngClass]="{'object-fit-fill': config.fit=='fill', 
+            'object-fit-contain': config.fit=='contain', 
+            'object-fit-cover': config.fit=='cover',
+            'object-fit-none': config.fit=='none',
+            'object-fit-scale-down': config.fit=='scale-down'
+         }"
+[src]="config.loadImage?(config.loadImage=='true'?baseURL + config.image.url:'/assets/images/NoImage.png'):config.image.url"
+
+(click)="eventfunctions.click()">
+
+<!--src="/assets/testimages/{{config.image}}"-->
+
+<!--src="/assets/images/NoImage.png"-->

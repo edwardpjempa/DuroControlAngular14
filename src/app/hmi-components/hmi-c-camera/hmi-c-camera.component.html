@@ -1,0 +1,12 @@
+<div style="width: 100%; height:100%;">
+    
+    <img id="camtest" class="camera" [src]="camURL" [style.display]="!nocamera && config.loadVideo=='true' ? 'initial' : 'none'" [ngStyle]="style()" (load)="load()"
+        style="object-fit:contain; width: 100%; height: 100%;"><!--*ngIf="!nocamera && config.loadVideo=='true'"-->
+
+    <div class="camera" style="width: 100%; height:100%; background-color: #a0a0a0; display: flex; justify-content: center; align-items: center;" 
+        [ngStyle]="style()" *ngIf="nocamera || config.loadVideo=='false'">
+
+        <i class="fad fa-video-slash" style="font-size: xxx-large;"></i>
+    </div>
+
+</div>    

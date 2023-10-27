@@ -1,0 +1,130 @@
+<div class="row">
+    <div class="col1">
+        <div class="subrow">
+          <h3 style="justify-content: center; display: flex;">Preconfigured CSV</h3>
+ 
+            <table>
+                <thead>
+                    <tr>
+                        <button matSuffix mat-icon-button matTooltip="Add new csv" (click)="addCsv()"> 
+                            <i class="fad fa-plus"></i>
+                        </button>
+                        <td>CSV Name</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let csv of configDataService.configFile.csv; let i = index" (click)="setCurrentCsv(csv.id)"
+                        [ngClass]="{'selected' : csv == currentCsv}">
+                        <td class="icon-column" (click)="removeCsv(csv.id); $event.stopPropagation();"><i class="fas fa-trash-alt"></i></td>
+                        
+                        <td *ngIf="!csvLocalValues[i].onEdit" (dblclick)="onCsvRename(i, inputRename)">{{csv.name}}</td>
+        
+                        <td [style.display]="csvLocalValues[i].onEdit ? 'block' : 'none'">
+                            <input #inputRename [style.display]="csvLocalValues[i].onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="csv.name" (click)="$event.stopPropagation()" 
+                                (blur)="csvLocalValues[i].onEdit = false;" (keydown.enter)="inputRename.blur();">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+ 
+        <div class="subrow" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+            <h4 style="justify-content: center; display: flex;">Tags List</h4>
+    
+            <table >
+                <thead>
+                    <tr>
+                        <td  class="icon-column"></td>
+                        <td>Tag</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tag of currentCsv?.tags">
+                        <td class="icon-column" (click)="removeTag(tag)"><i class="fas fa-trash-alt"></i></td>
+                        <td>{{tag.tag}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col2">
+        <div class="canvas-div" id="canvas-div">
+            <div *ngIf="(csvData.length > 0) && show_previewCSV" style="display: flex; justify-content: flex-end;">
+                <button mat-raised-button (click)="show_previewCSV = false" style="background-color: #ce1313eb; font-size: larger; color: whitesmoke;">X</button>
+            </div>
+
+            <div *ngIf="(csvData.length > 0) && show_previewCSV" style="display: grid; height: 90%;">
+                
+                <div class="example-container mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSource">
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+                        <ng-container *ngFor="let colDef of COL_DEFINITIONS">
+                            <ng-container *ngIf="colDef.sticky" [matColumnDef]="colDef.label" sticky>
+                                <th mat-header-cell *matHeaderCellDef [ngStyle]="colDef.style">{{colDef.label}}</th>
+                                <td style="padding-right: 50px; "  mat-cell *matCellDef="let element" [ngStyle]="colDef.style">{{element[colDef.label]}}</td>
+                            </ng-container>
+                            <ng-container *ngIf="!colDef.sticky" [matColumnDef]="colDef.label">
+                                <th style="padding-left: 50px;" mat-header-cell *matHeaderCellDef>{{colDef.label}}</th>
+                                <td style="padding-left: 50px;" mat-cell *matCellDef="let element">{{element[colDef.label]}}</td>
+                            </ng-container>
+                        </ng-container>
+                    
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+            </div>
+ 
+            <div *ngIf="!(csvData.length > 0) && !currentCsv" class="no-selection">
+
+                <div>
+                    <div style="display: flex; justify-content: center; padding: 10px;">
+                        <span>Select or create a new CSV config</span>
+                    </div>
+    
+                    <!--<div style="display: flex; justify-content: center;">
+                        <span>Increate Minutes In Past is necessary.</span>
+                    </div>-->
+
+                </div>
+            </div>
+
+            <div *ngIf="currentCsv && !show_previewCSV" class="no-selection">
+
+                <div style="display: flex; justify-content: center;">
+                    <button mat-raised-button color="primary" (click)="previewCsv()" [disabled]="!currentCsv || currentCsv?.tags.length == 0">Preview CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-div">
+            <div style="padding: 10px;">
+
+                <div style="display: flex; padding-bottom: 10px;">
+                    <mat-form-field class="selectField_exports" appearance="fill" (change)="onParamChange();" (keydown.enter)="onParamChange();" style="width: 150px;">
+                        <mat-label>Minutues in the Past</mat-label>
+                        <input numericOnly matInput type="number" [(ngModel)]="minutesInPast" [disabled]="!currentCsv">
+                    </mat-form-field>
+    
+                    <!--<mat-form-field appearance="fill" (change)="onParamChange();" (keydown.enter)="onParamChange(); $event.target.blur();" style="padding-left: 10px; padding-right: 10px; width: 150px;">
+                        <mat-label>Refresh Time</mat-label>
+                        <input numericOnly matInput type="number" [(ngModel)]="refreshTime" [disabled]="!currentCsv">
+                    </mat-form-field>-->
+
+                    <div style="display: flex; align-items: center; padding: 15px;">
+                        <span>Entries found: </span>
+                        <span *ngIf="csvData[1]">{{csvData[1].length}}</span>
+                        <span *ngIf="!csvData[1]">{{0}}</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <button mat-raised-button color="primary" (click)="exportCsv()" [disabled]="!currentCsv || exportCSV">Export CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

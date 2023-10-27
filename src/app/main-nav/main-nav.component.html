@@ -1,0 +1,142 @@
+<mat-toolbar color="primary" *ngIf="!hideToolbar_">
+   <mat-toolbar-row class="header">
+      <button mat-icon-button>
+         <i class="fas fa-bars" (click)="sidenav.toggle()"></i>
+      </button>
+      <img src="/assets/images/iO-TEQ-logo-white.png" height="100px" style="margin-right: 5px; margin-left: 5px;" [routerLink]="['/settings']">
+      <h1>Duro Control</h1> 
+      <div>
+         <button mat-icon-button (click)="configDataService.saveConfig()" class="left-space" [disabled]="disableBtns">
+            <i class="far fa-save"></i>
+         </button>
+         <button mat-icon-button [matMenuTriggerFor]="menu" class="left-space_menu" [disabled]="disableBtns">
+            <i class="fad fa-ellipsis-v-alt"></i>
+         </button>
+         <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="uploadConfig()">Upload Current Configuration</button>
+            <button mat-menu-item (click)="downloadConfig()">Download New Configuration</button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="firmwareUpgrade()">Firmware Upgrade</button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="uploadsMenu" (menuClosed)="uploadsMenuClosed()" 
+            class="left-space_menu" [disabled]="disableBtns" *ngIf="uploadFilesList.length > 0">
+            <i class="fad fa-arrow-from-bottom" style="color: darkgray;"></i>
+         </button>
+         <mat-menu #uploadsMenu="matMenu">
+            <div *ngFor="let upload of uploadFilesList; let i = index" style="display: flex;">
+               <div style="display: grid;">
+                  <span style="font-weight: 500; padding-top: 5px; padding-bottom: 5px; padding-left: 8px; padding-right: 8px;">{{upload.status}}</span>
+                  <div style="display: flex;">
+                     <div style="width: fit-content; display: flex; align-items: center; padding-left: 8px;">
+                        <i *ngIf="upload.status === 'Completed'" class="far fa-check" style="font-size: large; color: green;"></i>
+                        <i *ngIf="upload.status === 'Failed'" class="far fa-times" style="font-size: large; color: red;"></i>
+                        <mat-spinner *ngIf="upload.status === 'In Progress'" strokeWidth="3" mode="indeterminate" diameter="22"></mat-spinner>
+                     </div>
+                     <span style="padding-left: 10px; padding-right: 10px;">{{upload.filename}}</span>
+                  </div>
+                  <mat-divider style="margin-top: 8px; margin-bottom: 4px;"></mat-divider>
+               </div>
+            </div>
+         </mat-menu>
+      </div>
+      <span class="spacer"></span>
+      <div class="navEnd">
+         <button mat-icon-button (click)="goToMonitor()"[disabled]="disableBtns" style="margin-left: 15px;">
+            <i class="fas fa-tv"></i>
+         </button>
+         <button mat-icon-button (click)="databaseNav.toggle()" [disabled]="disableBtns" style="margin-left: 17px;">
+            <i class="fas fa-database"></i>
+         </button>
+         <button mat-icon-button (click)="openDialog()" [disabled]="disableBtns" title="About Information" style="margin-left: 15px;">
+            <svg xmlns="http://www.w3.org/2000/svg" height="25px" width="25px" viewBox="0 0 512 512">
+               <style>svg{fill:#FFFFFF}</style><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+            </svg>
+         </button>
+      </div>
+   </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container #sidenavContainer class="sidenav-container"  (window:resize)="onResize($event)">
+   <mat-sidenav #sidenav mode="side" [opened]="router.url != '/monitor'" class="sidenav" (opened)="onOpenSidenav()" (closed)="onCloseSidenav()">
+      <mat-nav-list>
+         <mat-accordion>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="fas fa-head-side-brain"></i>
+                     Controller
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <a mat-list-item routerLink="/settings"> Settings </a>
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="fas fa-database"></i>Database
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <a mat-list-item routerLink="/database"> Tag Database </a>
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="fas fa-analytics"></i>Analytics
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <a mat-list-item routerLink="/charts">Charts</a>
+               <a mat-list-item routerLink="/network-map">Network Map</a>
+               <a mat-list-item routerLink="/db-exports">DB Data Export</a>
+               <a mat-list-item routerLink="/sd-exports">SD Data Export</a>
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="far fa-network-wired"></i>
+                     Communications
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <div class="link-container">
+                  <a mat-list-item [routerLink]="['/module-home','Comm']"><span> General Config </span></a>
+               </div>
+               <div *ngFor="let module of configDataService.configFile.modules; index as i" class="link-container">
+                  <a *ngIf="module.type=='Comm' && module.module != 'EIPCComm' && module.module != 'httpClient' && module.module != 'modbusRTUClient'" refresh="refresh"
+                  mat-list-item [routerLink]="['/module',module['uniqueId']]"><span> {{module.name}} </span></a>
+               </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="fas fa-brackets-curly"></i>
+                     Logic
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <div class="link-container">
+                  <a mat-list-item [routerLink]="['/module-home','user']"><span> General Config </span></a>
+               </div>
+               <div *ngFor="let module of configDataService.configFile.modules; index as i" class="link-container">
+                  <a *ngIf="module.type=='user'"
+                  mat-list-item [routerLink]="['/module',module['uniqueId']]"><span> {{module.name}} </span></a>
+               </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="disableBtns">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>
+                     <i class="fas fa-desktop"></i>
+                     HMI
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <a mat-list-item routerLink="/editor"> Editor </a>
+               <a mat-list-item routerLink="/imageManager"> Image Manager </a>
+            </mat-expansion-panel>
+         </mat-accordion>
+      </mat-nav-list>
+   </mat-sidenav>
+   <mat-sidenav  #databaseNav mode="side" position="end" class="database-sidenav" closed (opened)="onOpenDBnav()" (closed)="onCloseDBnav()">  
+      <app-sidenav-resize (resized)="sidenavContainer.updateContentMargins();" (onResize)="DBresize($event);">
+         <app-database-view ></app-database-view> 
+      </app-sidenav-resize>
+   </mat-sidenav>
+   <mat-sidenav-content #sidenavContent class="sidenav-content">
+      <router-outlet>
+      </router-outlet>
+   </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,13 @@
+
+<button style="position: relative; top: -13px; left: -13px;" (click)="save()"><i class="far fa-times" style="color: #000000;"></i></button>
+<mat-form-field style="width: 100%; padding: 0; margin-top: -20px;" *ngFor="let control of myControls; let i = index">
+  <h5 class="functionCount">{{number[i]}} Function</h5>
+  <div class="helper">lol</div>
+  <input type="text" matInput  #myinput [formControl]="control" [matAutocomplete]="auto" (focus)="displayOverlay()">
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async; let i = index" [value]="option">
+      {{ option }}<h5 style="display: inline;">{{animationOptionsParameters[i]}}</h5>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<button style="border-radius: 6px;"><h3 style="margin: 0;" (click)="addFunctions()">Add Function</h3></button>

@@ -1,0 +1,20 @@
+<div [id]='"bar"+id' [ngStyle]="{'background-color': config.style['backgroundColor'], 
+'text-align':'center', 'height': '100%',
+ 'width': '100%', 'display': 'grid',
+ 'border-collapse': 'collapse',
+ 'position': 'absolute',
+ 'overflow': 'hidden', 'border': config.style['border']}"
+>
+   <apx-chart #chart
+   [series]="chartOptions.series!"
+    [chart]="chartOptions.chart!"
+    [colors]="chartOptions.colors"
+    [dataLabels]="chartOptions.dataLabels!"
+    [plotOptions]="chartOptions.plotOptions!"
+    [xaxis]="chartOptions.xaxis!"
+    [yaxis]="chartOptions.yaxis!"
+    [grid]="chartOptions.grid!"
+    [title]="chartOptions.title"
+    [legend]="chartOptions.legend!"
+   ></apx-chart>
+</div>

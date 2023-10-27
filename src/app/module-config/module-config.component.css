@@ -1,0 +1,36 @@
+.module-title {
+  padding: 0px 3px 0px 20px;
+  margin: 0 0 8px;
+}
+
+.module-statusBox{
+  padding: 5px;
+}
+
+.module-form {
+  min-width: 150px;
+  width: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+} 
+
+.full-width {
+  width: 100%;
+}
+ 
+.form-field {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.module-config-container {
+  padding: 0px 10px 0px 10px;
+}
+
+.CommentField.mat-form-field-wrapper{
+  padding-bottom: 0;
+}
+ 
+.CommentField.mat-form-field-underline{
+  bottom: 0;
+}

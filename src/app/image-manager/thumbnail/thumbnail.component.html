@@ -1,0 +1,20 @@
+<div style="display: flex; width: 100%;" *ngIf="onEdit">
+    <input type="checkbox" [(ngModel)]="selected" (change)="select($event, test, data.id);">
+</div>
+
+<span class="thumbnail"> 
+    
+    <img [id]="data.id" *ngIf="!!src; else transclude" [src]=src (error)="src = ''" />
+  
+    <ng-template #transclude>
+      <ng-content></ng-content>
+    </ng-template>
+  
+</span>
+  
+<span class="mat-small" *ngIf="!onEdit" style="width: 100%; white-space: break-spaces; line-break: anywhere; word-break: break-word;">{{ test }}</span>
+
+<mat-form-field class="inputField" *ngIf="onEdit" style="font-size: 12px; width: 90%;">
+    <mat-label>Name</mat-label>
+    <input matInput #input placeholder="Image's name" (change)="rename(test, data.id);" (keydown.enter)="input.blur();" (keyup)="rename(test, data.id);" [(ngModel)]="test" type="text" autocomplete="off" style="color:#000000bf">
+</mat-form-field>

@@ -1,0 +1,147 @@
+<div class="row">
+
+   <div class="col1">
+      <div class="table-wrapper">
+         <div class="subrow">
+            <div class="columnHeader">
+               <h1><strong>Network Nodes</strong></h1>
+               <div class="search-bar">
+                  <select [(ngModel)]="selectedFilter" class="filter-select">
+                     <option *ngFor="let criteria of filterCriteria" [value]="criteria">{{ criteria }}</option>
+                  </select>
+                  <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="renderFilteredChart()" placeholder="Search by {{ selectedFilter }}" class="search-input" />
+                  <button mat-icon-button color="primary" class="refresh-icon-button" (click)="renderFilteredChart()">
+                     <i class="reload fas fa-sync"></i>
+                  </button>
+               </div>
+               <div class="line"></div>
+            </div>
+            <div class="nodeDetails" #nodeListContainer>
+            <table>
+               <tbody>
+                     <ng-container *ngFor="let node of filteredNetworkNodes; let i = index">
+                        <tr id="node-{{ node.name }}">
+                           <td>
+                              <button matSuffix mat-icon-button matTooltip="Toggle Details" (click)="toggleDetails(node)">
+                                 <i class="fa" [class.fa-minus]="node.detailsVisible" [class.fa-plus]="!node.detailsVisible"></i>
+                              </button>
+                           </td>
+                           <td class="node-name">{{ node.name }}</td>
+                           <td class="address">{{ node.ip_address }}</td>
+                        </tr>
+
+                        <tr *ngIf="node.detailsVisible">
+                           <td colspan="3">
+                              <div class="node-details">
+                                 <div class="labels">
+                                    <div class="label"><strong>IP Address:</strong></div>
+                                    <div class="value">{{ node.ip_address }}</div>
+                                 </div>
+                                 <div class="labels">
+                                    <div class="label"><strong>MAC Address:</strong></div>
+                                    <div class="value">{{ node.mac_address }}</div>
+                                 </div>
+                                 <div class="labels">
+                                    <div class="label"><strong>Vendor:</strong></div>
+                                    <div class="value">{{ node.vendor }}</div>
+                                 </div>
+                                 <div class="labels">
+                                    <div class="label"><strong>Ping:</strong></div>
+                                    <div class="value">{{ node.ping }} ms</div>
+                                 </div>
+                                 <div class="labels">
+                                    <div class="label"><strong>Name:</strong></div>
+                                    <div class="value">
+                                       <input type="text" [(ngModel)]="node.name" />
+                                    </div>
+                                 </div>
+                                 <div class="labels">
+                                    <div class="label"><strong>Color:</strong></div>
+                                    <div class="value">
+                                       <input type="color" [(ngModel)]="node.color" />
+                                    </div>
+                                 </div>
+                                 <div class="value">
+                                    <div class="actions">
+                                       <div class="delete-button" (click)="removeNode(i)">
+                                          <i class="fas fa-trash-alt"></i>
+                                       </div>
+                                       <div class="apply-changes-button">
+                                          <button mat-raised-button color="primary" (click)="applyChanges(node, node.name, node.color)">Apply Changes</button>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </td>
+                        </tr>
+                     </ng-container>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="col2">
+
+      <div class="chart-container">
+         <div class="canvas-div" id="canvas-div">
+            <apx-chart 
+               #radarChart
+               [title]="radarChartOptions.title!"
+               [series]="radarChartOptions.series!" 
+               [chart]="radarChartOptions.chart!" 
+               [xaxis]="radarChartOptions.xaxis!"
+               [yaxis]="radarChartOptions.yaxis!"
+               [legend]="radarChartOptions.legend!"
+               [stroke]="radarChartOptions.stroke!"
+               [markers]="radarChartOptions.markers!">
+            </apx-chart>
+         </div>
+         <div class="config-buttons">
+            <div class="save-load-box">
+               <div class="save-button">
+                  <button mat-raised-button color="primary" (click)="saveConfiguration()">Save Config</button>
+               </div>
+               <div class="load-button">
+                  <button mat-raised-button color="primary" (click)="loadConfiguration()">Load Config</button>
+               </div>
+            </div>
+         </div>
+      </div>
+       
+      <!-- <div class="canvas-div" id="canvas-div">
+         <apx-chart 
+            #radarChart
+            [title]="radarChartOptions.title"
+            [series]="radarChartOptions.series" 
+            [chart]="radarChartOptions.chart" 
+            [xaxis]="radarChartOptions.xaxis"
+            [yaxis]="radarChartOptions.yaxis"
+            [legend]="radarChartOptions.legend"
+            [stroke]="radarChartOptions.stroke"
+            [markers]="radarChartOptions.markers">
+         </apx-chart>
+      </div> -->
+   </div>
+
+   <div class="refresh-button bottom-right">
+      <div class="scan-network-box">
+        <form #subnetForm="ngForm" (ngSubmit)="pingNetwork(subnetForm)">
+          <div class="subnet-input">
+            <input type="number" min="0" max="255" [(ngModel)]="subnetOctets[0]" name="subnetOctet1" required />
+            <span class="separator">.</span>
+            <input type="number" min="0" max="255" [(ngModel)]="subnetOctets[1]" name="subnetOctet2" required />
+            <span class="separator">.</span>
+            <input type="number" min="0" max="255" [(ngModel)]="subnetOctets[2]" name="subnetOctet3" required />
+            <span class="separator">.</span>
+            <span class="wildcard">1-255</span>
+          </div>
+          <button mat-raised-button color="primary" type="submit" [disabled]="subnetForm.invalid">
+            Scan Subnet
+          </button>
+         </form>
+      </div>
+   </div>
+
+</div>

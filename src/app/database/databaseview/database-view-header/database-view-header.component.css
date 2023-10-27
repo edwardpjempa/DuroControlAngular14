@@ -1,0 +1,52 @@
+.div-table-row {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   width: 100%;
+   border-bottom: 1px solid #eeeeee;
+ }
+
+.div-table-col {
+   white-space: nowrap; 
+   overflow: hidden;
+   text-overflow: ellipsis;
+   font-size: 14px;
+   font-weight: bold;
+   border-right: 1px solid #eeeeee;
+   padding: 3px;
+
+ }
+
+.div-table-col-last {
+   white-space: nowrap; 
+   overflow: hidden;
+   text-overflow: ellipsis;
+   font-size: 14px;
+   font-weight: bold;
+   flex-grow: 1;
+   padding: 3px;
+}
+
+.dragger {
+    width: 10px;
+    height: 100%;
+    float: right;
+    margin-left: -5px;
+    cursor: col-resize;
+ }
+
+.main-div {
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+.header {
+   flex-grow: 0;
+}
+
+.body {
+   flex-grow: 1;
+   overflow: hidden;
+   overflow-y: scroll;
+}

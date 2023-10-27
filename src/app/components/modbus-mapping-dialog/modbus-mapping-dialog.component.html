@@ -1,0 +1,168 @@
+<h1 mat-dialog-title>Register Mapping</h1>
+<div mat-dialog-actions>
+            <input
+               class="input"
+               (keyup)="tagSelected($event)"
+               type="text"
+               matInput
+               placeholder="Search Tag"
+               [formControl]="tagSelectorControl"
+               [matAutocomplete]="auto"
+            />
+            <mat-autocomplete [panelWidth]="'matAutocomplete'" #auto="matAutocomplete">
+               <mat-option
+                  class="menu-option"
+                  *ngFor="let child of filteredOptions | async"
+                  [value]="child"
+                  >{{ child }}</mat-option
+               >
+            </mat-autocomplete>
+            <button class="enterButton" (click)="enterPressed($event)"><i class="far fa-sign-in fa-xs"></i>
+            </button>
+   <button *ngIf="selectMode" mat-button (click)="cancelSelect()" class="button">
+      Cancel
+   </button>
+   <button class="button"
+      *ngIf="selectMode && selection.selected.length > 0"
+      mat-button
+      (click)="handleDelete()"
+   >
+      Delete
+   </button>
+   <button *ngIf="!selectMode" mat-button (click)="handleDelete()" class="button">
+      Select
+   </button>
+   <p *ngIf="problemTag != ''" style="margin: -5px 0px 0px 13px;"> Error: Tag Name may be misspelled or Tag Data Type is not a Number</p>
+</div>
+<mat-dialog-content style="border: 1px solid black; margin: 5px">
+   <div
+      class="modbus-overlay-container"
+      cdkDropListGroup
+      (dragover)="$event.preventDefault()"
+      (drop)="tagDropped($event)"
+   >
+      <div class="mapping-col" *ngFor="let column of columnList; let i = index">
+         <div
+            style="
+               height: 100%;
+               display: flex;
+               flex-direction: row;
+               border-top: solid 1px #ccc;
+            "
+         >
+            <div style="flex: 1">
+               <!-- <h2>Registers</h2> -->
+               <div *ngFor="let mapping of column">
+                  <div
+                     *ngFor="let register of mapping.registers"
+                     [style.height.px]="
+                        data.dataType.includes('8') ? 10 * 2 + 21 : 10
+                     "
+                     class="register-cell"
+                  >
+                     {{ register }}
+                  </div>
+               </div>
+            </div>
+            <div style="flex: 1">
+               <!-- <div>
+                        <h2>Tag</h2>
+                    </div> -->
+               <div
+                  cdkDropList
+                  [cdkDropListData]="mapping.tags"
+                  *ngFor="let mapping of column; let j = index"
+                  (cdkDropListDropped)="drop($event)"
+               >
+                  <div *ngFor="let tag of mapping.tags; trackBy:trackByFn; let k = index">
+                     <div
+                        [ngClass]="{
+                           selected: selection.isSelected(mapping.indices[k]),
+                            highlightTableColor: tag == problemTag 
+                        }"
+                        cdkDrag
+                        class="tag-cell"
+                        [style.height.px]="
+                           data.dataType.includes('32') ? 10 * 2 + 21 : 10
+                        "
+                        (click)="tagClicked($event, mapping.indices[k])"
+                     >
+                        <input
+                           type="text" (keyup)="p($event, k)"
+                           [(ngModel)]="mapping.tags[k]"
+                            (input)="p($event, k)"
+                        />
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+   <button mat-button [mat-dialog-close]="data.tags" cdkFocusInitial>
+      Close
+   </button>
+</div>
+<!-- <div class="modbus-overlay-container" cdkDropListGroup (dragover)="$event.preventDefault()"  (drop)="tagDropped($event)">
+        <div class="mapping-col" *ngFor="let item of [].constructor(numOfCols), let i = index">
+            <div style="height: 100%; display:flex; flex-direction: row;">
+                <div style="flex: 1;">
+                    <h2>Registers</h2>
+                    <div *ngFor="let item of [].constructor(countPerRow), let j = index">
+                        <div [style.height.px]="(data.dataType.includes('8')) ? (10*2)+21 : 10" class="register-cell"  *ngIf="(i*countPerRow)+j < count">
+                            {{(i*countPerRow)+j+data.startRegister}}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="flex: 1">
+                    <div>
+                        <h2>Tag</h2>
+                    </div>
+                    <div  cdkDropList [cdkDropListData]="mappingLists[i]" (cdkDropListDropped)="drop($event, i)">
+                        <div (click)="tagClicked(i, j)" cdkDrag class="tag-cell" [style.height.px]="(data.dataType.includes('32')) ? (10*2)+21 : 10"
+                        *ngFor="let item of mappingLists[i], let j = index">
+                        {{item}}
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="tag-table">
+        <div class="example-container">
+            <div class="register-cell">
+                <h2>Register</h2>
+            </div>
+
+            <div class="example-list">
+                <ng-container *ngIf="data.dataType.includes('32'); else sixteenBit">
+                    <div class="register-cell" *ngFor="let item of [].constructor(data.tags.length*2), let i = index">
+                        {{i+data.startRegister}}</div>
+                </ng-container>
+                <ng-template #sixteenBit>
+                    <div class="register-cell" *ngFor="let item of [].constructor(data.tags.length), let i = index">
+                        {{i+data.startRegister}}</div>
+                </ng-template>
+            </div>
+        </div>
+
+        <div class="example-container">
+            <div class="tag-cell">
+                <h2>Tag</h2>
+            </div>
+            <div cdkDropList class="example-list" [cdkDropListData]="data.tags" (cdkDropListDropped)="drop($event)">
+                <div [style.height.px]="(data.dataType.includes('32')) ? (16*2)+21 : 16" class="tag-cell"
+                    *ngFor="let item of data.tags, let i = index">
+                    <div cdkDrag>{{item}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button  mat-button [mat-dialog-close]="totalTags" cdkFocusInitial>Close</button>
+  </div> -->

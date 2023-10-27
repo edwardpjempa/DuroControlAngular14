@@ -1,0 +1,10 @@
+.setTimeButton {
+    margin-left: 10px;
+    width: 100px;
+    height: 22px;
+    padding: 0;
+    border-width: 1px;
+    border-radius: 19px; 
+    font-weight: 480;
+    font-size: 14px;
+}

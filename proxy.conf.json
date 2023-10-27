@@ -1,0 +1,22 @@
+{
+  "/hmiimages": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/config": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/user_modules": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/softwareupdate": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/sdlogslist": {
+    "target": "http://localhost:80",
+    "secure": false
+  }
+}

@@ -1,0 +1,24 @@
+<div>
+    <h1 mat-dialog-title style="display:inline-block;cursor:move;" mat-dialog-draggable>{{data.renameType}}</h1>
+    <mat-icon (click)="onNoClick()" style="float:right;margin-right:-10px;margin-top:-10px;cursor:pointer;color:gray;">
+        <i class="far fa-times" style="font-size: 140%;"></i>
+    </mat-icon>
+    <div mat-dialog-content>
+        <!--<div class="my-form-field" style="display: block;margin-bottom: 10px;">
+            <span>Name:</span>
+            <input [(ngModel)]="data.name" type="text" style="width:250px" [readonly]="data.readonly">
+        </div>-->
+
+        <mat-form-field class="my-form-field" style="display: block;margin-bottom: 10px;">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" [(ngModel)]="data.name" [readonly]="data.readonly">
+            <button mat-button  matSuffix mat-icon-button matTooltip="Clear" (click)="data.name=''">
+                <i class="far fa-times"></i>
+            </button>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="dialog-action">
+        <button mat-raised-button (click)="onNoClick()">CANCEL</button>
+        <button mat-raised-button [disabled]="!isValid(data.name)" [mat-dialog-close]="data" color="primary" cdkFocusInitial>OK</button>
+    </div>
+</div>

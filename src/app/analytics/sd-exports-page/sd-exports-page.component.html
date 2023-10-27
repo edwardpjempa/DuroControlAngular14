@@ -1,0 +1,56 @@
+<mat-toolbar>
+    <mat-icon *ngIf="canNavigateUp" class="pointer" (click)="navigateUp()">
+        <i class="fas fa-arrow-left"></i>
+    </mat-icon>
+    <span style="margin-left: 8px">{{path || 'SD Logs'}}</span>
+    <span class="spacer"></span>
+
+    <button mat-button (click)="refresh(path)">
+        <mat-icon style="display: unset; font-size: x-large;">
+            <i class="fad fa-sync-alt"></i>
+        </mat-icon>
+    </button>
+</mat-toolbar>
+
+<div class="im_loading-spinner" *ngIf="isLoading">
+    <mat-progress-spinner diameter=65 strokeWidth="9" mode="indeterminate"></mat-progress-spinner> 
+</div>
+
+<div class="container">
+    <div class="content"  >
+      <mat-grid-list cols="4" rowHeight="100px">
+        <mat-grid-tile *ngFor="let element of logs" class=file-or-folder>
+          <span [matMenuTriggerFor]="rootMenu" [matMenuTriggerData]="{element: element}" #menuTrigger="matMenuTrigger"></span>
+          <div (dblclick)="navigate(element)"  style="display: grid;" (contextmenu)="openMenu($event,element, menuTrigger)">
+            <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="element.isFolder" style="height: 100%; width: 100%; justify-content: center; display: flex;">
+                <i class="fad fa-folder" style="font-size:xxx-large;"></i>
+            </mat-icon>
+            <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="!element.isFolder" style="height: 100%; width: 100%; justify-content: center; display: flex;"
+                [matTooltip]="formatBytes(element.size)" [matTooltipShowDelay]="1000">
+                <i class="far fa-file-spreadsheet" style="font-size:xxx-large;"></i>
+            </mat-icon>
+            <span style="justify-content: center; display: flex;">{{element.name}}</span>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+</div>
+
+<mat-menu #rootMenu="matMenu" [overlapTrigger]="false">
+    <ng-template matMenuContent let-element="element">
+
+      <button mat-menu-item (click)="navigate(element)" *ngIf="!element.isFolder">
+        <mat-icon style="display: unset; font-size: larger;">
+            <i class="fas fa-file-download"></i>
+        </mat-icon>
+        <span>Download</span>
+      </button>
+
+      <button mat-menu-item (click)="delete(element)">
+        <mat-icon style="display: unset; font-size: larger;">
+            <i class="fad fa-trash-alt"></i>
+        </mat-icon>
+        <span>Delete</span>
+      </button>
+    </ng-template>
+</mat-menu>

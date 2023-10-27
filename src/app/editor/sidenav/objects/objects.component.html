@@ -1,0 +1,107 @@
+<div [style.display]="enableObjectSearch ? 'initial' : 'none'">
+    <mat-form-field style="padding-right: 12px; padding-left: 12px; width: -webkit-fill-available; padding-top: 10px;">
+        <mat-label>Filter</mat-label>
+        <input #input id="objectFilter" matInput placeholder="Component Name or Id" (keyup)="filter(input)">
+    </mat-form-field>
+</div>
+
+<cdk-virtual-scroll-viewport itemSize="40" minBufferPx="100" maxBufferPx="300" [style.height.px]="virtualScrollHeight">
+    <ng-container *cdkVirtualFor="let node of dataSource;">
+        
+        <div *ngIf="node.type !== 'folder'" style="min-height: 48px; display: flex; align-items: center;">
+            <div [style.padding-left]="getLevel(node) * 20 + 'px'" style="width: 100%;" class="view-tree-node">
+                <div style="display: flex;">
+
+                    <div style="display: flex; align-items: center; padding-right: 7px;">
+                        <i class="fal fa-cube" style="font-size: larger;"></i>
+                    </div>
+                    
+                    <div style="display: flex;">
+                        <div style="width: 100%; align-items: center; display: flex;">
+                            <button mat-button [matTooltip]="node.id" [matTooltipShowDelay]="700" (click)="onComponentSelection(node.id)" (dblclick)="onComponentRename(node, inputRename)" 
+                                *ngIf="!node.onEdit"  [disabled]="!node.visibility" [ngClass]="{'component-active': isComponentActive(node.id)}"
+                                style="text-overflow: ellipsis; overflow-x: hidden; width: fit-content;  padding-left: 6px; padding-right: 6px;"
+                                [style.max-width.px]="269-(getLevel(node)*20)-28.41-50-12">
+                                            
+                                <span style="display: block; overflow: hidden; text-overflow: ellipsis;">{{onComponentName(node.id)}}</span>
+
+                            </button>
+                            <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                                (focus)="onEdit(true)" (blur)="node.onEdit = false; onRenameComponent(node); onEdit(false)" (keydown.enter)="inputRename.blur();">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                        <button mat-icon-button (click)="onComponentVisibility(node)">
+                            <i class="fad fa-eye" *ngIf="node.visibility"></i>
+                            <i class="fad fa-eye-slash" *ngIf="!node.visibility"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="node.type === 'folder'" style="min-height: 48px; display: flex; align-items: center;">
+
+            <div [style.padding-left]="getLevel(node) * 20 + 'px'" style="display: flex;" >
+                <button mat-icon-button (click)="treeControl.toggle(node);">
+                    <i class="fad fa-chevron-down" *ngIf="treeControl.isExpanded(node)"></i>  
+                    <i class="fad fa-chevron-right" *ngIf="!treeControl.isExpanded(node)"></i>  
+                </button>
+
+                <div style="display: flex; align-items: center; padding-right: 10px;">
+                    <i class="fal fa-file" *ngIf="node.name != 'components'" style="font-size: larger;"></i>
+                </div>
+        
+                <span style="display: flex; align-items: center; font-size: 14px;">{{node.name}}</span>
+            </div>
+        </div>
+	</ng-container>
+
+</cdk-virtual-scroll-viewport>
+
+
+<!--<mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl">
+	<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="20">
+
+        <div style="display: contents;">
+            <i class="fal fa-cube" style="padding-right: 4px;"></i>
+
+            <div style="display: flex;">
+                <div style="width: 100%;">
+                    <button mat-button [matTooltip]="node.id" [matTooltipShowDelay]="700" (click)="onComponentSelection(node.id)" (dblclick)="onComponentRename(node, inputRename)" 
+                        *ngIf="!node.onEdit"  [disabled]="!node.visibility" [ngClass]="{'component-active': isComponentActive(node.id)}"
+                        style="text-overflow: ellipsis; overflow-x: hidden; width: fit-content; max-width: 146px; padding-left: 6px; padding-right: 6px;">
+                                     
+                        <span style="display: block; overflow: hidden; text-overflow: ellipsis;">{{onComponentName(node.id)}}</span>
+
+                    </button>
+                    <input #inputRename [style.display]="node.onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="node.name" (click)="$event.stopPropagation()" 
+                        (focus)="onEdit(true)" (blur)="node.onEdit = false; onRenameComponent(node); onEdit(false)" (keydown.enter)="$event.target.blur();">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; height: 100%; padding-right: 10px; width: -webkit-fill-available;">
+                <button mat-icon-button (click)="onComponentVisibility(node)">
+                    <i class="fad fa-eye" *ngIf="node.visibility"></i>
+                    <i class="fad fa-eye-slash" *ngIf="!node.visibility"></i>
+                </button>
+            </div>
+        </div>
+	</mat-tree-node>
+
+    <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding></mat-tree-node>
+
+	<mat-tree-node *matTreeNodeDef="let node; when: isFolder" matTreeNodePadding matTreeNodePaddingIndent="10">
+		<button mat-icon-button matTreeNodeToggle >
+            <i class="fad fa-chevron-down" *ngIf="treeControl.isExpanded(node)"></i>  
+            <i class="fad fa-chevron-right" *ngIf="!treeControl.isExpanded(node)"></i>  
+        </button>
+
+        <i class="fal fa-file" *ngIf="node.name != 'components'" style="padding-right: 5px;"></i>
+            
+        <span>{{node.name}}</span>
+            
+	</mat-tree-node>
+</mat-tree>-->

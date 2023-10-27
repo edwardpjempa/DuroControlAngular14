@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+li.L0, li.L1, li.L2, li.L3, li.L4,
+li.L5, li.L6, li.L7, li.L8, li.L9 {
+    list-style-type: decimal;
+}
+
+
+.context-menu+* .cdk-overlay-pane {
+    font-size: .6em;
+    line-height: 20px;
+}
+/* pointer */
+.mycursor-pointer {
+    cursor: pointer;
+}
+
+.my-panel-class .mat-dialog-container {
+    padding: 10px;
+  }

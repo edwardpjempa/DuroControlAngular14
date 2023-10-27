@@ -1,0 +1,109 @@
+<div style="position: fixed;">
+   <div class="invisibleBox">
+      <h3
+         style="
+            margin: 4px;
+            padding: 0;
+            text-align: center;
+            font-size: 20px;
+            padding-bottom: 4px;
+         "
+      >
+         Date and Time
+      </h3>
+      <div class="timeBox">
+         <h1 id="DuroDate" class="dateHeader"></h1>
+
+         <h1 id="DuroTime" class="timeHeader"></h1><h1 class="utcHeader" id="DuroUTC">(+:11 UTC)</h1>
+         <input
+            style="margin-left: 11px; vertical-align: middle"
+            type="checkbox"
+            id="ntp"
+            (click)="ntpActive()"
+         />
+         <label
+            style="
+               color: white;
+               vertical-align: bottom;
+               font-weight: 400;
+               font-size: 14px;
+               padding-top: 5px;
+            "
+            >NTP active</label
+         >
+         <button (click)="popupConfirmBox('the system time')" class="setTimeButton" id="setTimeButton">Set Time</button>
+
+      </div>
+   </div>
+   <div class="invisibleBox">
+      <h3
+         style="
+            margin: 4px;
+            padding: 0;
+            text-align: center;
+            font-size: 20px;
+            padding-bottom: 4px;
+         "
+      >
+         Network
+      </h3>
+      <div class="ipBox">
+         <span class="spann">
+            <label style="margin-left: 26px; margin-right: 27px; color: white"
+               >IP</label
+            ><input id="DuroIP"
+               placeholder="127.0.0.1"
+               (keydown)="IPMask($event)"
+               style="border: 1px; border-radius: 2px"
+         /></span>
+         <span class="spann">
+            <label style="margin-right: 3px; color: white">SubMask </label
+            ><input id="DuroNetMask"
+               (keydown)="IPMask($event)"
+               placeholder="255.255.255.0"
+               style="border: 1px; border-radius: 2px"
+         /></span>
+         <span class="spann" style="padding-bottom: 3px">
+            <label style="margin-right: 7px; color: white; margin-bottom: 5px"
+               >Gateway </label
+            ><input id="DuroGateway"
+               (keydown)="IPMask($event)"
+               placeholder="0.0.0.0"
+               style="border: 1px; border-radius: 2px"
+         /></span>
+         <div
+            style="
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               margin-top: 6px;
+            "
+         >
+            <input
+               style="margin-left: 14px; vertical-align: middle"
+               type="checkbox"
+               id="DHCP"
+               (click)="setDHCP()"
+            />
+            <label
+               style="
+                  color: white;
+                  vertical-align: bottom;
+                  font-weight: 400;
+                  font-size: 14px;
+               "
+               >DHCP</label
+            >
+            <button
+               id="submitNetwork"
+               class="setTimeButton"
+               style="margin-left: 35px;margin-right: 4px;"
+               (click)="popupConfirmBox('the network')"
+            >
+               Set Network
+            </button>
+            <mat-icon><mat-spinner id="spinner" class="custom-spinner" diameter="22" color="white" style="display: none;"> </mat-spinner></mat-icon>
+         </div>
+      </div>
+   </div>
+</div>

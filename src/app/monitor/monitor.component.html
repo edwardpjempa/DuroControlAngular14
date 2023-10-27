@@ -1,0 +1,51 @@
+<div id="mainContainer" #mainContainer style="height: 100%; width: 100%; background: #eee;">
+
+    <div>
+        <span *ngIf="noHmiContent">Wait... go to editor, design your visualization and bind your devices' variables.</span>
+    </div>
+
+    <!-- <div id="hmiContainer" #hmiContainer style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transform-origin: 0px 0px; background: white;"> -->
+   <div id="hmiContainer" #hmiContainer >
+
+        <!-- <app-hmi-c-view [view]="viewName" [viewsIndex]="monitorDataService.viewsIndex"></app-hmi-c-view> -->
+        <!--<app-hmi-c-view *ngIf="monitorDataService.viewsIndex" [view]="monitorDataService.viewsIndex[viewName]"></app-hmi-c-view>-->
+        <!-- View Name: {{viewName}}
+        {{viewData}} -->
+
+
+
+        <!-- <div *ngFor="let control of components;let indexOfelement=index;">
+
+
+            
+            
+           <ng-container [ngSwitch] = "control.config.type">
+                <ng-container *ngSwitchCase="'button'" [ngTemplateOutlet]="button"></ng-container>
+                <ng-container *ngSwitchCase="'slider'" [ngTemplateOutlet]="slider"></ng-container>
+                <ng-container *ngSwitchCase="'dropdown'" [ngTemplateOutlet]="dropdown"></ng-container>
+                <ng-container *ngSwitchCase="'input'" [ngTemplateOutlet]="input"></ng-container>
+            </ng-container>
+            
+            <ng-template #button>
+                <ctl-button [id]="control.id" [buttonConfig]="control.config" (btnOutput)="this[control.function]($event)"></ctl-button>
+            </ng-template>
+            
+            <ng-template #slider>
+                <ctl-slider [id]="control.id" [sliderConfig]="control.config" (sliderEmt)="this[control.function]($event)"></ctl-slider>
+            </ng-template>
+    
+            <ng-template #dropdown>
+                <ctl-dropdown [id]="control.id" [dropdownConfig]="control.config" (dropdownEmt)="this[control.function]($event)"></ctl-dropdown>
+            </ng-template>
+    
+            <ng-template #input>
+                <ctl-input [id]="control.id" [inputConfig]="control.config" (inputEmt)="this[control.function]($event)"></ctl-input>
+            </ng-template>
+        </div>-->
+    </div>
+    <div id="sideMenu" class="side-main-menu" *ngIf="showSideNavBtn">
+        <button mat-icon-button (click)="mainSideNav()">
+            <i class="fas fa-bars" style="font-size: 120%;"></i>
+        </button>
+    </div>
+</div>

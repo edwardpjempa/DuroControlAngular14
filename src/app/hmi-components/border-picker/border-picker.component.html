@@ -1,0 +1,26 @@
+<div (click)="$event.stopPropagation();">
+    <div (click)="$event.stopPropagation();" matTooltip="Border Picker" [matMenuTriggerFor]="borderPicker" style="height:24px; background: #b0b0b069;" [ngStyle]="{border: borderInputData}"></div>
+</div>
+
+<mat-menu #borderPicker="matMenu">
+
+    <div style="padding: 10px; display: flex; flex-flow: row;" (click)="$event.stopPropagation();"> <!--mat-dialog-content-->
+        <!--Style field-->
+        <mat-form-field class="selectField" (keydown)="$event.stopPropagation()" floatLabel="never" style="width: 70px; padding-left: 10px; padding-right: 10px;">
+            <mat-select placeholder="Style" (selectionChange)="onParamChange();" [(value)]="borderData.style" required>
+                <mat-option *ngFor="let option of formOptions.style" [value]="option">
+                    {{option.charAt(0).toUpperCase() + option.slice(1)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <!--Color field-->
+        <app-color-picker [colorInput]="borderData.color" (colorOutput)="borderData.color = $event; onParamChange();" (onEdition)="onEdition.emit($event)" style="width: 85px; justify-content: center; align-items: center; display: flex;"></app-color-picker>
+
+        <!--Width field-->
+        <mat-form-field class="inputField" (change)="onParamChange();" (keydown)="$event.stopPropagation()" (keyup)="onParamChange(); $event.stopPropagation()" floatLabel="never" style="width: 60px; padding-left: 10px; padding-right: 10px;">
+            <input matInput type="number" placeholder="Width" [(ngModel)]="borderData.width" required>
+            <span matSuffix *ngIf="suffixData.width">{{suffixData.width}}</span>
+        </mat-form-field>
+    </div>
+</mat-menu>

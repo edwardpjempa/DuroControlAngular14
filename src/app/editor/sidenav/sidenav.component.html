@@ -1,0 +1,93 @@
+<!--Views Panel-->
+<mat-expansion-panel #viewPanel id="viewPanel" class="view_expansionPanel" [togglePosition]="'before'" (click)="$event.stopPropagation()" (opened)="panelsState.panelView=true; onResize()" (closed)="panelsState.panelView=false; onResize()" [expanded]="hmi.views.length > 0">
+    <mat-expansion-panel-header class="workarea-leftbar-h" style="background-color: #dcdcdc;">
+        <mat-panel-title>
+            <span style="display: flex; align-items: center;">Views</span>
+        </mat-panel-title>
+
+        <mat-icon matTooltip="View Search" *ngIf="panelsState.panelView" (click)="viewSearch(); $event.stopPropagation()" 
+            [ngClass]="{'search-active': enableViewSearch === true}" style="margin-right: 10px; margin-left: 10px; display: flex; align-items: center;">
+            <i style="width: 100%;" class="fad fa-search"></i>
+        </mat-icon>
+
+        <mat-icon matTooltip="New Folder" *ngIf="panelsState.panelView" (click)="addFolder();$event.stopPropagation()"
+            style="display: flex; align-items: center;">
+            <i class="fad fa-folder-plus"></i>
+        </mat-icon>
+
+        <mat-icon matTooltip="New View" *ngIf="panelsState.panelView" (click)="editor.onAddView();$event.stopPropagation()"
+            style="display: flex; align-items: center;">
+            <i class="far fa-plus"></i>
+        </mat-icon>
+
+        <mat-icon matTooltip="Import View" *ngIf="panelsState.panelView" (click)="eservice.onImportView();$event.stopPropagation()"
+            style="display: flex; align-items: center;">
+            <i class="fal fa-file-import"></i>
+        </mat-icon>
+        <input type="file" #viewFileImportInput style="display: none" id="viewFileUpload" (click)="$event.stopPropagation()" (change)="editor.onViewFileChangeListener($event, viewFileImportInput)" accept=".json" />
+    </mat-expansion-panel-header>
+
+    <div class="leftbar-panel" #viewPanel_ id="viewPanel_" >
+        <e-sidenav-views [trackBy]="trackByViews" [hmi]="hmi" [currentView]="currentView" [viewsTree]="viewsTree" [panelViewHeight]="panelViewHeight"
+            [enableViewSearch]="enableViewSearch"
+            (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"
+            (onClickDect)="panelMaxHeight()" (onSelectView)="onSelectView.emit($event)" (onPropertyView)="onPropertyView.emit($event)" 
+            (onCloneView)="onCloneView.emit($event)" (onAddView)="onAddView.emit()" (onEdition)="onEdition.emit($event)">
+        </e-sidenav-views>
+    </div>
+</mat-expansion-panel>
+
+<!--Objects Panel-->
+<mat-expansion-panel #objPanel id="objPanel" class="objs_expansionPanel" [togglePosition]="'before'" (opened)="openObjPanel(); panelsState.panelObjects = true; onResize()" (closed)="closeObjPanel(); panelsState.panelObjects = false; onResize()" >
+    <mat-expansion-panel-header class="workarea-leftbar-h" style="background-color: #dcdcdc;">
+        <mat-panel-title>
+            <span style="display: flex; align-items: center;">Objects</span>
+        </mat-panel-title>
+
+        <mat-icon matTooltip="Component Search" *ngIf="panelsState.panelObjects" (click)="objectSearch(); $event.stopPropagation();" 
+            [ngClass]="{'search-active': enableObjectSearch === true}" style="margin-right: 10px; margin-left: 10px; display: flex; align-items: center;">
+            <i style="width: 100%;" class="fad fa-search"></i>
+        </mat-icon>
+    </mat-expansion-panel-header> 
+
+    <div class="leftbar-panel" #objPanel_ id="objPanel_" >
+        <e-sidenav-objects [trackBy]="trackByComponents" [selections]="selections" [currentView]="currentView" [hmi]="hmi"
+            [panelObjectHeight]="panelObjectHeight" [enableObjectSearch]="enableObjectSearch"
+            (selectionOutput)="onClickEventReceived($event)" (onEdition)="onEdition.emit($event)" (onClickDect)="panelMaxHeight()">
+        </e-sidenav-objects>
+    </div>
+</mat-expansion-panel>
+
+<!--Properties Panel-->
+<mat-expansion-panel #propertiesPanel id="propertiesPanel" class="properties_expansionPanel" [togglePosition]="'before'" [disabled]="selections.length === 0 || selections.length > 1" (opened)="panelsState.panelProperties = true; onResize()" (closed)="panelsState.panelProperties = false; onResize()">
+    <mat-expansion-panel-header class="workarea-leftbar-h" style="background-color: #dcdcdc;">
+        <mat-panel-title>
+            <span>Properties</span>
+        </mat-panel-title>
+
+        <mat-icon matTooltip="Expand Property Window" *ngIf="panelsState.panelProperties"  (click)="expandWindow();$event.stopPropagation()">
+            <i class="fas fa-expand-alt"></i>
+        </mat-icon>
+
+        <mat-icon matTooltip="Add Property" *ngIf="panelsState.panelProperties && parameters.length > 0" [matMenuTriggerFor]="properties" (click)="$event.stopPropagation()">
+            <i class="far fa-plus"></i>
+        </mat-icon>
+
+        <mat-menu #properties="matMenu">
+            <div *ngIf="panelsState.panelProperties && parameters.length > 0">
+                <div *ngFor="let parameter of parameters;">
+                    <button mat-menu-item (click)="addProperty(parameter)">{{parameter.viewName}}</button><!--$event.stopPropagation();-->
+                </div>
+            </div>
+                
+        </mat-menu>
+    </mat-expansion-panel-header>
+
+    <div class="leftbar-panel" #propertiesPanel_ id="propertiesPanel_" >
+        <span *ngIf="selections.length > 1" style="display: flex; justify-content: center; padding-top: 15px; padding-bottom: 15px; text-align: center;">Select one component at a time to display properties.</span>
+        <span *ngIf="selections.length === 0" style="display: flex; justify-content: center; padding-top: 15px; padding-bottom: 15px; text-align: center;">Select a component to display properties.</span>
+        <e-sidenav-properties *ngIf="selections.length === 1" [trackBy]="{trackByProperties: trackByProperties, currentParameters: currentParameters}" 
+            [hmi]="hmi" [selections]="selections" [currentView]="currentView" (onEdition)="onEdition.emit($event)">
+        </e-sidenav-properties>
+    </div>
+</mat-expansion-panel>

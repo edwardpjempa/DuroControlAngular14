@@ -1,0 +1,22 @@
+<div class="main-div">
+   <div *ngIf="headers" class="div-table-row header">
+      <div class="div-table-col" [style.width.px]="colwidths[0]">
+         {{ headers[0] }}
+      </div>
+      <div class="dragger" (mousedown)="onMouseDown($event, 0)"></div>
+      <div class="div-table-col-last">
+         {{ headers[1] }}
+      </div>
+   </div>
+   <div class="body">
+      <app-database-view-row
+         *ngFor="let treenode of treedata"
+         [treenode]="treenode"
+         [gap]="[treenode.name]"
+         [colwidths]="colwidths"
+         [tagValues]="tagValues"
+         (treeChanged)="treeChanged.emit()"
+      >
+      </app-database-view-row>
+   </div>
+</div>

@@ -1,0 +1,32 @@
+<div style="padding: 3px;" [style.transform]="transform" [ngStyle]="config.style"><!--style="background-color: rgb(0 0 0 / 54%); padding: 3px;"-->
+    <div style="height: 22px; padding: 3px; display: flex; align-items: center; border-radius: 4px;" [ngStyle]="dispStyle()">
+        <span id="text" style="overflow-x:scroll;" *ngIf="!secureInput">{{lastInput}}</span><!--style="height: none"-->
+        <span id="text" style="overflow-x:scroll;" *ngIf="secureInput">{{lastInputStard}}</span>
+    </div>
+    <div *ngFor="let set of keyboardFunctionsChars" style="display: flex;">
+        <button *ngFor="let char of set" style="margin: 2px; width: 26px; height: 24px; font-size: 10px;"
+                [id]="char"
+                (click)="enterCharacter(char)"
+                >
+            {{char}}
+        </button>
+    </div>
+    <div *ngFor="let set of keyboardChars" style="display: flex;">
+        <button *ngFor="let char of set" style="margin: 2px; width: 26px; height: 24px;"
+                [id]="char"
+                (click)="enterCharacter(char)"
+                >
+            {{char}}
+        </button>
+    </div>
+    
+    <div style="display: flex;">
+        <button  style="margin: 2px; width: 41px; height: 24px; font-size: 8px; padding: 0;"
+            (click)="eventfunctions.cancel()">CANCEL
+        </button>
+        <button  style="margin: 2px; width: 41px; height: 24px; font-size: 8px;"
+            (click)="eventfunctions.enter(lastInput)">ENTER
+        </button>
+    </div>
+</div>
+<!--<button (click)="enterCharacter(' ')">Space</button>-->

@@ -1,0 +1,42 @@
+table {
+   font-size: 14px;
+   border-collapse: collapse;
+   width: 100%;
+   padding: 0;
+   table-layout: fixed; 
+   border-collapse: collapse;
+   border-spacing: 0;
+
+}
+
+
+div {
+   padding: 0 5px 0 5px;
+   display: inline-block;
+}
+
+/*
+.table { display: table; width: 100%;}
+.row { display: table-row; }
+.cell { display: table-cell; border: 1px solid black;}
+*/
+
+/* table, th, td {
+   border: 1px solid rgb(180,180,180);
+   border-width: 1px 1px 1px 1px;
+   background-color: rgb(240,240,240);
+   overflow: hidden;
+   text-overflow: ellipsis;
+} */
+
+
+table, th, td {
+   padding: 5px 0 5px 0;
+   border: 1px solid rgb(180,180,180);
+   border-width: 1px 1px 1px 1px;
+/*   background-color: white; */
+
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}

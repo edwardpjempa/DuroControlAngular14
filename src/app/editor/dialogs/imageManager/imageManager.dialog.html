@@ -1,0 +1,6 @@
+<app-image-manager
+  [chosenImg]="{id: data.cmptProperties.data.imgId}"
+  [actionBtns]="true"
+  (actionButtons)="actionButtons($event)"
+  (imgSelected)="data.imgSelected = $event"
+></app-image-manager>

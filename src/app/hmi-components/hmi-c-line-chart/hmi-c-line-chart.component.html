@@ -1,0 +1,19 @@
+
+<div [id]='"line"+id' [ngStyle]="{'background-color': config.style['backgroundColor'], 
+'text-align':'center', 'height': '100%',
+ 'width': '100%', 'display': 'grid',
+ 'border-collapse': 'collapse',
+ 'position': 'absolute',
+ 'overflow': 'hidden', 'border': config.style['border']}">
+  <apx-chart #chart
+  [series]="chartOptions.series!"
+  [chart]="chartOptions.chart!"
+  [xaxis]="chartOptions.xaxis!"
+  [dataLabels]="chartOptions.dataLabels!"
+  [grid]="chartOptions.grid!" 
+  [stroke]="chartOptions.stroke!"
+  [title]="chartOptions.title!"
+  [yaxis]="chartOptions.yaxis!"
+></apx-chart>
+  </div>
+  

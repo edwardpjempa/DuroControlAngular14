@@ -1,0 +1,103 @@
+<div style="width: 100%;position: relative;padding-bottom: 0px">
+    <h2 mat-dialog-title style="display:inline-block;cursor:move;" mat-dialog-draggable>Firmware Upgrade</h2>
+
+    <button mat-icon-button *ngIf="!disableCloseBtn" (click)="onNoClick()"
+        style="float:right;margin-right:-10px;margin-top:-10px;cursor:pointer;color:gray;">
+        <i class="far fa-times" style="font-size: 140%;"></i>
+    </button>
+
+    <div style="width: 100%;">
+        <span style="float: right;">Current version: {{firmwareVer}}</span>
+        <div style="padding-bottom: 10px; padding-left: 10px; padding-right: 10px;">
+            <span *ngIf="upload_status !== 0 && upload_status !== 7" style="font-size: 15px;">UPGRADING...</span>
+            <div style="padding: 20px;">
+                
+                <div *ngIf="upload_status === 0 || upload_status === 1">
+                    <mat-form-field floatPlaceholder="never" style="width: 400px;">
+                        <input [hidden]="true" (change)="firmwareFile = firmwareSelect.files; firmwareFileName = firmwareSelect.files![0].name" (click)="firmwareSelect.value = ''; firmwareFile = null;" type="file" accept=".firmware" #firmwareSelect>
+                        <input readonly matInput [(ngModel)]="firmwareFileName" placeholder="Select file..."/>
+                        <button *ngIf="this.firmwareFileName" (click)="this.firmwareFileName = ''; firmwareFile = null;" matSuffix matTooltip="Remove selected file" [disabled]="upload_status !== 0"
+                            [matTooltipPosition]="'above'" type="button" color="warn" mat-icon-button>
+                            <i class="fal fa-times"></i>
+                        </button>
+                        <button matSuffix mat-icon-button (click)="firmwareSelect.click();"  matTooltip="Select a file" [matTooltipPosition]="'above'" [disabled]="upload_status !== 0">
+                            <i class="fad fa-file-upload"></i>
+                        </button> 
+                    </mat-form-field>
+                    
+                    <h5 *ngIf="firmwareFile">Firmware size: {{formatBytes(firmwareFile[0].size)}}</h5>
+                </div>
+                
+                <div *ngIf="percentDone < 100 && upload_status === 1" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>Uploading firmware... {{percentDone}}%</span>
+                    <mat-progress-bar mode="determinate" [value]="percentDone" style="padding-top: 10px;"></mat-progress-bar>
+                </div>
+
+                <div *ngIf="percentDone === 100 && upload_status === 1" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>Unpacking firmware...</span>
+                    <mat-progress-bar mode="indeterminate" style="padding-top: 10px;"></mat-progress-bar>
+                </div>
+
+                <div *ngIf="upload_status === 2" style="padding: 10px;">
+                    <span  style="font-weight: bold;">STATUS: </span>
+                    <span>Please wait while finishing the upgrade.</span>
+                    <mat-progress-bar mode="indeterminate" style="padding-top: 10px;"></mat-progress-bar>
+                </div>
+
+                <div *ngIf="upload_status === 3 && restart_timer_id" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>To complete upgrade, the Duro-1 will restart in {{restart_timer_firmware}}.</span>
+                </div>
+
+                <div *ngIf="upload_status === 4 && !restart_timer_id" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>Rebooting...</span>
+                </div>
+
+                <!--message when upgrade fails-->
+                <div *ngIf="upload_status === 5" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-times-circle" style="color: red; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Unable to complete upgrade.</span>
+                </div>
+
+                <div *ngIf="upload_status === 6" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-hourglass-start" style="font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Waiting for Duro-1 to initialize...</span>
+                </div>
+
+                <!--message when the upgrade is successfull-->
+                <div *ngIf="upload_status === 7" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-check-circle" style="color: green; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Firmware upgrade successful.</span>
+                </div>
+
+                <!--message when upgrade can not be verified-->
+                <div *ngIf="upload_status === 8" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-times-circle" style="color: red; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Firmware upgrade could not be verified.</span>
+                </div>
+
+                <!--<div *ngIf="upload_progress || restart_timer_id || (!restart_timer_id && restart_timer === 0)" style="padding: 40px;">
+                    <span *ngIf="upload_progress" style="font-weight: bold;">STATUS: </span>
+                    <span *ngIf="upload_progress">Unpacking firmware</span>
+                    <mat-progress-bar mode="indeterminate" *ngIf="upload_progress" style="padding-top: 10px;"></mat-progress-bar>
+
+                    <span *ngIf="restart_timer_id" style="font-weight: bold;">STATUS: </span>
+                    <span *ngIf="restart_timer_id">To complete upgrade, the Duro-1 will restart in {{restart_timer}}.</span>
+
+                    <span *ngIf="!restart_timer_id && restart_timer === 0" style="font-weight: bold;">STATUS: </span>
+                    <span *ngIf="!restart_timer_id && restart_timer === 0">Restating...</span>
+                </div>-->
+            </div>
+
+            <span *ngIf="upload_status!=0 && upload_status !== 7" style="color: #514c45;font-size: 15px;">Do not refresh your browser or turn off the Duro-1!!</span>
+            <span *ngIf="upload_status === 7" style="color: #514c45;font-size: 15px;">It is now OK to close this window.</span>
+        </div>
+
+        <div *ngIf="firmwareFile && upload_status === 0" style="width: inherit; display: flex; justify-content: flex-end;">
+            <button mat-raised-button color="primary" (click)="uploadFirmware(firmwareFile)" [disabled]="upload_status !== 0">Apply</button>
+        </div>
+    </div>
+</div>

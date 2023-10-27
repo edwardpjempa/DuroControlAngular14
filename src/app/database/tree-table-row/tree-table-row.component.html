@@ -1,0 +1,59 @@
+<table>
+   <tr [ngClass]="{'selected': selected, 'clicked': selectedTag == dbRowFullName}" (click)="rowclicked(dbRowData)">
+      <td width="36px" (click)="checkboxClick(gap.join('.'))">
+         <i *ngIf="!selected" class="far fa-square select-icon"></i>
+         <i *ngIf="selected" class="far fa-check-square select-icon"></i>
+      </td>
+      <td (dblclick)="onNameEdit(inputNameEdit)">
+         <div *ngFor="let g of gap"></div>
+         <div *ngIf="dbRowData.children" (click)="showChildren = !showChildren">
+            <i *ngIf="!showChildren" class="far fa-chevron-right"></i>
+            <i *ngIf="showChildren" class="far fa-chevron-down"></i>
+         </div>
+         <span *ngIf="!edittingName" >{{dbRowName}}</span> 
+         <input #inputNameEdit [style.display]="edittingName ? 'initial' : 'none'" type="text" value="{{dbRowName}}" (keydown.enter)="finishEdittingName(inputNameEdit.value)" (blur)="finishEdittingName(inputNameEdit.value)" style="width: 70%;">
+      </td>
+      <td width="100px" (dblclick)="onTypeEdit(inputTypeEdit)"> 
+         <span *ngIf="!edittingType" style="display: flex; justify-content: center;">{{dbRowData.datatype}}{{ dbRowData.arraydim > 1 ? "[" + dbRowData.arraydim + "]" : ""}}</span>
+         <select #inputTypeEdit [style.display]="edittingType ? 'initial' : 'none'" name="datatype" value="{{dbRowData.datatype}}" (blur)="edittingType = false"
+         (keydown.enter)="edittingType = false" (change)="dbRowData.datatype = inputTypeEdit.value; edittingType=false; changed(inputTypeEdit.value, dbRowData)">
+            <option value="Number">Number</option>
+            <option value="Text">Text</option>
+          </select>
+      </td>
+      <td width="55px" class="number-td" (dblclick)="onDimEdit(inputDimEdit)">
+         <span *ngIf="!edittingDim" style="display: flex; justify-content: center;">{{dbRowData.arraydim}}</span>
+         <input #inputDimEdit style="width: -webkit-fill-available;" [style.display]="edittingDim ? 'initial' : 'none'" type="number" value="{{dbRowData.arraydim}}" (keydown.enter)="editDim(inputDimEdit.value)" (blur)="editDim(inputDimEdit.value)">
+      </td>      
+      <td class="number-td" (dblclick)="onValueEdit(inputValueEdit)">
+         <span *ngIf="!edittingValue && !dbRowData.config?.hidden" style="display: flex; justify-content: center;">{{dbRowData.value}}</span> 
+         <span *ngIf="dbRowData.config?.hidden" style="display: flex; justify-content: center;">----</span> 
+         <input #inputValueEdit style="text-align: center; width: 94%;" [style.display]="edittingValue && dbRowData.datatype=='Number' && dbRowData.config?.hidden == false ? 'initial' : 'none'" type="number" value="{{dbRowData.value}}" (keydown.enter)="finishEdittingValue(inputValueEdit.value)" (blur)="finishEdittingValue(inputValueEdit.value)">
+         <input #inputValueEdit [style.display]="edittingValue && dbRowData.datatype=='Text' && dbRowData.config?.hidden == false ? 'initial' : 'none'" type="text" value="{{dbRowData.value}}" (keydown.enter)="finishEdittingValue(inputValueEdit.value)" (blur)="finishEdittingValue(inputValueEdit.value)" style="width:93%;">
+      </td>
+      <td class="comment-td" (dblclick)="onCommentEdit(inputCommentEdit)">
+         <span *ngIf="!edittingComment">{{dbRowData.comment}}</span>
+         <input #inputCommentEdit class="comment-input" [style.display]="edittingComment ? 'initial' : 'none'" type="text" value="{{dbRowData.comment}}" (keydown.enter)="finishEdittingComment(inputCommentEdit.value)" (blur)="finishEdittingComment(inputCommentEdit.value)">
+      </td>
+      <td width="36px" >
+         <i *ngIf="!dbRowData.config?.persistent && dbRowData.datatype!='Folder'" class="far fa-square select-icon" (click)="dbRowData.config.persistent = !dbRowData.config?.persistent; $event.stopPropagation(); "></i>
+         <i *ngIf="dbRowData.config?.persistent && dbRowData.datatype!='Folder'" class="far fa-check-square select-icon" (click)="dbRowData.config.persistent = !dbRowData.config?.persistent; $event.stopPropagation(); "></i>
+      </td>
+      <td width="36px">
+         <i *ngIf="!dbRowData.config?.historic && dbRowData.datatype!='Folder'" class="far fa-square select-icon" (click)="dbRowData.config.historic = !dbRowData.config?.historic; $event.stopPropagation(); "></i>
+         <i *ngIf="dbRowData.config?.historic && dbRowData.datatype!='Folder'" class="far fa-check-square select-icon" (click)="dbRowData.config.historic = !dbRowData.config?.historic; $event.stopPropagation(); "></i>
+      </td>
+      <td width="100px" (dblclick)="onDeadbandEdit(inputDeadbandEdit)">
+            <span *ngIf="!edittingDeadband" style="display: flex; justify-content: center;">{{dbRowData.config?.deadband}}</span> 
+            <input #inputDeadbandEdit style="width: -webkit-fill-available;" [style.display]="edittingDeadband ? 'initial' : 'none'" type="number" value="{{dbRowData.config?.deadband}}" (keydown.enter)="finishEdittingDeadband(inputDeadbandEdit.value)" (blur)="finishEdittingDeadband(inputDeadbandEdit.value)">
+      </td>
+   </tr>
+</table>
+<ng-container *ngIf="dbRowData.children && showChildren">
+   <app-tree-table-row *ngFor="let objName of Object.keys(dbRowData.children)" (checkbox)="checkbox.emit(gap.join('.'))"
+      [dbRowData]="dbRowData.children[objName]" [dbRowName]="objName" [gap]="gap.concat([objName])" [dbRowFullName]="gap.concat([objName]).join('.')"
+      (clicked)="this.clicked.emit($event)"
+      [selectedTag]="selectedTag"
+      (tagrenamed)="renameTag($event)" [list]="list">
+   </app-tree-table-row>
+</ng-container>

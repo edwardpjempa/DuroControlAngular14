@@ -1,0 +1,98 @@
+<div class="module-config-container">
+    <h1 class="module-title" *ngIf="moduleType == 'Comm'">Communications Configuration</h1>
+    <h1 class="module-title" *ngIf="moduleType =='user'">User Process Logic Configuration</h1>
+    <h1 class="module-title" *ngIf="moduleType =='CustomModule'">User Module Configuration</h1>
+    <ng-container *ngIf="moduleType =='Comm'; else custom">
+        <button mat-icon-button matTooltip="Create New" [matMenuTriggerFor]="createMenu"><i class="fas fa-plus"></i></button>
+        <mat-menu #createMenu="matMenu">
+            <button mat-menu-item (click)="createNew('modbusTCPClient')">Modbus TCP/IP Client</button>
+            <button mat-menu-item (click)="createNew('modbusTCPServer')">Modbus TCP/IP Server</button>
+            <button mat-menu-item (click)="createNew('EIPComm')">EtherNet/IP</button>
+            <button mat-menu-item (click)="createNew('EIPComm2')">EtherNet/IP 2</button>  
+            <button mat-menu-item (click)="createNew('EIPComm3')">EtherNet/IP 3</button>    
+        </mat-menu>
+    </ng-container>
+    <ng-template #custom>
+        <ng-container *ngIf="moduleType == 'CustomModule'; else other">
+            <button mat-icon-button matTooltip="Upload Module" (click)="openModuleUpload()"><i class="fas fa-upload"></i></button>
+            <button (click)="downloadModules()" *ngIf="selection.selected.length > 0" mat-icon-button matTooltip="Download Module(s)"><i class="fas fa-download"></i></button>
+        </ng-container>
+    </ng-template>
+    <ng-template #other>
+        <button (click)="createNew(moduleType)" mat-icon-button matTooltip="Create New"><i class="fas fa-plus"></i></button>
+    </ng-template>
+    <button #editButton (click)="changeState()" mat-icon-button matTooltip="{{(editState) ? 'Done' : 'Edit'}}">
+        <i [ngClass]="(editState) ? 'fas fa-check' : 'fas fa-edit'"></i>
+    </button>
+    <button (click)=deleteSelected() *ngIf="editState && selection.selected.length > 0" mat-icon-button
+        matTooltip="Delete"><i class="fas fa-trash-alt"></i></button>
+    <table class='eip-table'>
+        <tbody>
+            <tr>
+                <th>
+                    <div *ngIf="editState">
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </div>
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Module
+                </th>
+                <th>
+                    Enabled
+                </th>
+            </tr>
+            <tr *ngFor="let module of filteredModules(); index as index" [ngStyle]="{'display': path == '/module-home/user' && module.type == 'user' ? 'table-row' : 'none'}">
+                <td>
+                    <div *ngIf="editState">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(module) : null"
+                            [checked]="selection.isSelected(module)">
+                        </mat-checkbox>
+                    </div>
+                </td>
+                <td [routerLink]="['/module', module['uniqueId']]">
+                    <ng-container *ngIf="editState; else viewState">
+                        <input [(ngModel)]="module.name" value="{{module.name}}">
+                    </ng-container>
+                    <ng-template #viewState>{{module.name}}</ng-template>
+                </td>
+                <td>
+                    {{module.module}}
+                </td>
+                <td>
+                    <mat-checkbox [disabled]="!editState" [(ngModel)]="module.enabled">
+                    </mat-checkbox>
+                </td>
+            </tr>
+            <tr *ngFor="let module of filteredModules(); index as index" [ngStyle]="{'display': path == '/module-home/Comm' ? 'table-row' : 'none'}">
+                <td>
+                    <div *ngIf="editState">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(module) : null"
+                            [checked]="selection.isSelected(module)">
+                        </mat-checkbox>
+                    </div>
+                </td>
+                <td [routerLink]="['/module', module['uniqueId']]">
+                    <ng-container *ngIf="editState; else viewState">
+                        <input [(ngModel)]="module.name" value="{{module.name}}" (click)="preventClick($event)">
+                    </ng-container>
+                    <ng-template #viewState>{{module.name}}</ng-template>
+                </td>
+                <td>
+                    {{module.module}}
+                </td>
+                <td>
+                    <mat-checkbox [disabled]="!editState" [(ngModel)]="module.enabled">
+                    </mat-checkbox>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,15 @@
+
+<div>
+    <span *ngIf="show">
+        <h2 id="functionHelper">Function Helper</h2>
+        <h4 id="additionalHelp"></h4>
+        <div id="help" (click)="clickOnLine($event)"></div>
+        <h3 id="exampleUsage">Example Usage</h3>
+        <button id='anotherExample' (click)="anotherExample()">Another Example</button>
+        <p id="example"></p>
+    </span>
+    <div>
+        <i class="fal fa-info-circle" (click)="openDialog()" [matTooltip]="'help'" [matTooltipPosition]="'above'"></i>
+        <app-hmi-function-editor [(inputValue)]="inputValue"></app-hmi-function-editor>
+    </div>
+</div>

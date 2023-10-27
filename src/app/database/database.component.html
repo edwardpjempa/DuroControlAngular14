@@ -1,0 +1,24 @@
+<div class="container">
+   <div class="header">
+      <nav>
+          <div style="padding-top: 3px; padding-bottom: 3px; display: flex; background: #fafafa; width: 100%;">
+              <div style="padding-right: 10px;border-left: #ffffff00; border-left-style: solid; height: auto;">
+                  <button mat-icon-button matTooltip="Add Folder" (click)="configDataService.databaseAddNewFolder(selectedTag)">
+                     <i class="far fa-folder-plus"></i>
+                  </button>
+                  <button mat-icon-button matTooltip="Add Tag" (click)="configDataService.databaseAddNewTag(selectedTag)">
+                     <i class="far fa-tag"></i>
+                  </button>
+                  <button mat-icon-button matTooltip="Delete" >
+                     <i class="fad fa-trash-alt" matTooltip="Delete Tag or Folder" (click)="configDataService.databaseDeleteTag(list); clearList()"></i>
+                 </button>
+              </div>
+          </div>
+      </nav>
+  </div>
+   <app-tree-table [headers]="['Name','Data Type','Value','Description']"
+   [data]="configDataService.configFile.database.tags" (checkbox)="checkSelected($event)"
+   [selectedTag]="selectedTag"
+   (tagSelected)="selectedTag = $event" [list]="list">
+   >
+ </app-tree-table>

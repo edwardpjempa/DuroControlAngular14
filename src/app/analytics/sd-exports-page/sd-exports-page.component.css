@@ -1,0 +1,41 @@
+.file-or-folder {
+    padding: 8px;
+    overflow: hidden;
+}
+
+.container{
+    overflow: hidden;
+}
+
+.file-or-folder-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+
+/* --------------- */
+/* Loading Spinner */
+/* --------------- */
+.u-loading {
+    z-index: 9999;
+    position:relative
+}
+.im_loading-spinner {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #00000059;
+    z-index: inherit;
+}

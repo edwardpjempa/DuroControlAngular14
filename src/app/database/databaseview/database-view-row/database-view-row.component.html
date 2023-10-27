@@ -1,0 +1,60 @@
+<!-- (dragstart)="drag($event,gap)" -->
+<!-- <table  draggable="true"> -->
+
+<div [ngClass]="{'selected': selected}" class="div-table-row" (dblclick)="startedit()" *ngIf="!treenode?.hidden">
+   <!-- <td width="36px" (click)="checkboxClick(gap.join('.'))">
+         <i *ngIf="!selected" class="far fa-square select-icon"></i>
+         <i *ngIf="selected" class="far fa-check-square select-icon"></i>
+      </td> -->
+
+   <div class="div-table-col" [style.width.px]="colwidths[0]">
+      <div *ngFor="let g of gap" class="div-gap"></div>
+      <div *ngIf="treenode.children" (click)="toggleNode()" class="div-icon">
+         <!-- <i *ngIf="!showChildren" class="far fa-chevron-right"></i>
+         <i *ngIf="showChildren" class="far fa-chevron-down"></i> -->
+         <i *ngIf="!treenode.showChildren" class="fal fa-folder"></i>
+         <i *ngIf="treenode.showChildren" class="fal fa-folder-open"></i>
+      </div>
+      <!-- <div *ngIf="!treenode.children" class="div-icon" [ngClass]="{'text-tag': treenode.dataType=='Text', 'number-tag': treenode.dataType=='Number'}">
+         <i class="fas fa-text"></i>
+         <i class="fas fa-tag"></i>
+      </div> -->
+
+      <div *ngIf="treenode.dataType=='Text'" class="div-icon" >
+         <i class="fas fa-text"></i>
+      </div>
+
+      <div *ngIf="treenode.dataType=='Number'" class="div-icon">
+         <!-- <i class="fas fa-calculator-alt"></i> -->
+         <i class="far fa-ruler"></i>
+      </div>
+
+      <div class="tagname" draggable="true" (dragstart)="drag($event,gap)" ><span>{{treenode.name}}</span></div>
+   </div>
+   <!-- <div class="div-table-col"  [style.width.px]="colwidths[1]">
+      <span *ngIf="treenode.dataType!='Folder'">
+         {{treenode.dataType}}
+      </span>
+   </div> -->
+
+
+   <div class="div-table-col-last"  > <!-- [style.width.px]="colwidths[1]" -->
+      <span *ngIf="!editMode">{{tagValues[gap.join('.')]}}</span>
+      <input #editinput *ngIf="editMode && treenode?.editable" type="text"  [value]="edittedValue" (focusout)="canceledit()" (change)="changededit()" >
+   </div>
+   <!-- <div class="div-table-col"  [style.width.px]="colwidths[2]">{{gap.join('.')}}</div> -->
+
+
+</div>
+<ng-container *ngIf="treenode.children && treenode.showChildren">
+   <app-database-view-row *ngFor="let treenode of treenode.children" [treenode]="treenode"
+      [gap]="gap.concat([treenode.name])" [colwidths]="colwidths"
+      (treeChanged)="treeChanged.emit()" [tagValues]="tagValues">
+   </app-database-view-row>
+</ng-container>
+
+
+
+
+
+

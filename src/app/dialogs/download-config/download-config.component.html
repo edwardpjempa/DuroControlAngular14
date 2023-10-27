@@ -1,0 +1,74 @@
+<div style="width: 100%;position: relative;padding-bottom: 0px">
+    <h2 mat-dialog-title style="display:inline-block;cursor:move;" mat-dialog-draggable>Configuration Download</h2>
+
+    <button mat-icon-button (click)="onNoClick()" [disabled]="disableCloseBtn"
+        style="float:right;margin-right:-10px;margin-top:-10px;cursor:pointer;color:gray;">
+        <i class="far fa-times" style="font-size: 140%;"></i>
+    </button>
+
+    <div style="width: 100%;">
+        <div style="padding-bottom: 10px; padding-left: 10px; padding-right: 10px;">
+            <span *ngIf="upload_status !== 0 && upload_status !== 4 && upload_status !== 5" style="font-size: 15px;">UPDATING...</span>
+            <div style="padding: 17px;">
+               
+                <div *ngIf="upload_status === 0 || upload_status === 1">
+                    <mat-form-field floatPlaceholder="never" style="width: 400px;">
+                        <input [hidden]="true" (change)="configFile = configSelect.files; configFileName = configSelect.files![0].name" (click)="configSelect.value = ''; configFile = null;" type="file" accept=".config" #configSelect><!--accept=".config"-->
+                        <input readonly matInput [(ngModel)]="configFileName" placeholder="Select file..."/>
+                        <button *ngIf="this.configFileName" (click)="this.configFileName = ''; configFile = null;" matSuffix matTooltip="Remove selected file" [disabled]="upload_status !== 0"
+                            [matTooltipPosition]="'above'" type="button" color="warn" mat-icon-button>
+                            <i class="fal fa-times"></i>
+                        </button>
+                        <button matSuffix mat-icon-button (click)="configSelect.click();"  matTooltip="Select a file" [matTooltipPosition]="'above'" [disabled]="upload_status !== 0">
+                            <i class="fad fa-file-upload"></i>
+                        </button> 
+                    </mat-form-field>
+                    <!--<span style="float: right;">Current version: </span>-->
+                    <!--<a  style="float: right;" href="javascript:void 0" (click)=downloadFile()>Download current config</a>-->
+                    <h5 *ngIf="configFile">Config size: {{formatBytes(configFile[0].size)}}</h5>
+                </div>
+
+                <div *ngIf="percentDone < 100 && upload_status === 1" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>Uploading configuration... {{percentDone}}%</span>
+                    <mat-progress-bar mode="determinate" [value]="percentDone" style="padding-top: 10px;"></mat-progress-bar>
+                </div>
+
+                <div *ngIf="percentDone === 100 && upload_status === 1" style="padding: 10px;">
+                    <span style="font-weight: bold;">STATUS: </span>
+                    <span>Applying changes...</span>
+                    <mat-progress-bar mode="indeterminate" style="padding-top: 10px;"></mat-progress-bar>
+                </div>
+
+                <div *ngIf="upload_status === 2" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-check-circle" style="color: green; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Configuration loaded successfully.</span>
+                </div>
+
+                <div *ngIf="upload_status === 3" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-sync-alt" style="font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Restarting Duro-1 services.</span>
+                </div>
+
+                <div *ngIf="upload_status === 4" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-check-circle" style="color: green; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Configuration update successfully completed.</span>
+                </div>
+
+                <div *ngIf="upload_status === 5" style="padding: 10px; align-items: center; display: flex;">
+                    <i class="fad fa-times-circle" style="color: red; font-size: x-large;"></i>
+                    <span style="padding-left: 10px;">Unable to load the configuration.</span>
+                </div>
+
+            </div>
+
+            <span *ngIf="upload_status!=0 && upload_status !== 4 && upload_status !== 5" style="color: #514c45;font-size: 15px;">Do not refresh your browser or turn off the Duro-1!!</span>
+            <span *ngIf="upload_status === 4" style="color: #514c45;font-size: 15px;">It is now OK to close this window.</span>
+        </div>
+
+        <div *ngIf="configFile && upload_status === 0" style="width: inherit; display: flex; justify-content: flex-end;">
+            <button mat-raised-button color="primary" (click)="uploadConfig(configFile)" [disabled]="upload_status !== 0">Apply</button>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,8 @@
+<mat-form-field class="dropdown" appearance="fill" [id]="dropdownConfig.id" *ngIf="!dropdownConfig.hide" (click)="onBtnClick(dropdownConfig.id)" style="position: absolute;" [ngStyle]="dropdownConfig.style">
+    <mat-label>{{dropdownConfig.label}}</mat-label>
+    <mat-select [disabled]="dropdownConfig.disabled"> 
+        <mat-option *ngFor="let option of dropdownConfig.data" [value]="option.value">
+            {{option.viewValue}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

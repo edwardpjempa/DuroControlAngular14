@@ -1,0 +1,26 @@
+<!--<ng-container [ngSwitch] = "buttonConfig.btnType">
+    <ng-container *ngSwitchCase="'raised'" [ngTemplateOutlet]="raised_button"></ng-container>
+    <ng-container *ngSwitchCase="'flat'" [ngTemplateOutlet]="flat_button"></ng-container>
+  </ng-container>
+  
+  <ng-template #raised_button>
+    <button [id]="buttonConfig.id" mat-raised-button *ngIf="!buttonConfig.hide" type="button" [ngStyle]="buttonConfig.config"
+      (click)="onBtnClick(buttonConfig.id)" style="position: absolute;">
+      {{ buttonConfig.text | uppercase}}
+    </button>
+  </ng-template>
+  
+  <ng-template #flat_button>
+    <button [id]="buttonConfig.id" mat-flat-button type="button" [ngStyle]="buttonConfig.config" (click)="onBtnClick(buttonConfig.id)"
+      style="position: absolute;">{{ buttonConfig.text | uppercase}}
+    </button>
+</ng-template>-->
+
+<button type="button" class="btn" [ngStyle]="config.style"
+  style="position: absolute; overflow: hidden;"><!--(click)="onCmptClick()"-->
+  <span *ngIf="config?.placeholderType === 'text' || !config?.placeholderType">
+    {{ config.text }} <!--{{ animationdata.text | uppercase }}-->
+  </span>
+
+  <i *ngIf="config?.placeholderType === 'icon'" [class]="config.text"></i>
+</button>

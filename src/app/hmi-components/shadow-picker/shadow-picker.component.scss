@@ -1,0 +1,24 @@
+:host {
+    display: block;
+}
+
+.inputField .mat-form-field-wrapper {
+    padding-bottom: 2px !important;
+}
+
+.inputField .mat-form-field-underline {
+    bottom: 1px;
+}
+
+.mat-menu-panel{
+    min-height: unset;
+    max-width: none !important;
+}
+
+.blur_slider .mat-slider-wrapper .mat-slider-thumb-container .mat-slider-thumb{
+    background-color: rgba(48,89,175,1);
+}
+
+.blur_slider .mat-slider-wrapper .mat-slider-track-wrapper .mat-slider-track-fill{
+    background-color: rgba(48,89,175,1);
+}

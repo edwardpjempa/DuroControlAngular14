@@ -25,7 +25,15 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            
+            "scripts": [
+              "src/assets/js/ace-editor/ace.js",
+              "src/assets/js/ace-editor/mode-python.js",
+              "src/assets/js/ace-editor/ext-language_tools.js",
+              "src/assets/js/JSZip/jszip.min.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+
+            ]
           },
           "configurations": {
             "production": {
@@ -62,6 +70,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "angular14:build",
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "angular14:build:production"

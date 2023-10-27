@@ -1,0 +1,52 @@
+
+<mat-card style="margin:30px; min-width: 400px;">
+   <mat-card-title>
+      <h1 class="module-title" id="title" *ngIf="module=='modbusTCPClient'" style="display: inline-block;">Modbus TCP/IP Client</h1>
+      <mat-card *ngIf="module=='modbusTCPClient'" style="margin-left: 3px; display: inline-block; vertical-align: top; padding: 6px;" id="TCPStatusBox">
+         <mat-card-content id="status"></mat-card-content>
+       </mat-card>
+      <h1 class="module-title" id="title" *ngIf="module=='EIPComm' || module=='EIPComm2' || module=='EIPComm3'" style="display: inline-block;">EtherNet/IP Communications</h1>
+      <mat-card class="module-statusBox" *ngIf="module=='EIPComm' || module=='EIPComm2' || module=='EIPComm3'" style="margin-left: 3px; display: inline-block; vertical-align: top;" id="EIPStatusBox">
+         <mat-card-content class="module-status" id="status"></mat-card-content>
+       </mat-card>
+      <h1 class="module-title" *ngIf="module=='modbusTCPServer'">Modbus TCP/IP Server</h1>
+      <h1 class="module-title" *ngIf="module=='userCode'">User Process Logic</h1>
+      <h1 class="module-title" *ngIf="module=='CustomModule'">User Module</h1>
+   </mat-card-title>
+   <div >
+   <mat-card-content>
+      <mat-tab-group #matTabGroup [selectedIndex]="0" >
+         <mat-tab label="Configuration" ><div>
+            <form class="module-form" style="padding: 5px 5px 0px 5px; height: 100px; display: flex; justify-content: space-between; flex-wrap: wrap;">
+               <div style="flex: 0 14%">
+                  <div style="justify-content: center; display: flex;">
+                     <input *ngIf="module=='modbusTCPServer' || module=='EIPComm' || module=='EIPComm2' || module=='EIPComm3' || module=='modbusTCPClient' || module=='userCode'" type="checkbox" id="enabled" (click)="click()"/>
+                     <h4 style="font-size: 12px; margin-bottom: 0; width: 50px; display: flex; text-align: center; line-height: initial;">Enable Module</h4>
+                  </div>
+               </div>
+               <mat-form-field style="flex: 0 36%">
+                  <mat-label>Name</mat-label>
+                  <input matInput placeholder="Name" [(ngModel)]="moduleName" [ngModelOptions]="{standalone: true}" (keyup)="onChanged('name')"/>
+               </mat-form-field>
+               <mat-form-field class="CommentField" style="flex: 0 36%">
+                  <mat-label>Comment</mat-label>
+                  <textarea matInput rows="4" placeholder="Comment About this Module" [(ngModel)]="moduleComment" (keyup)="onChanged('comment')"
+                     [ngModelOptions]="{standalone: true}"></textarea>
+               </mat-form-field>
+               <div *ngIf="module =='CustomModule'">
+                  <a  href="javascript:void" (click)=downloadFile()>Download Module</a>
+               </div>
+            </form>
+            <div class="module-config-container" *ngIf="showComponent">
+            <app-modbus-tcp-ip *ngIf="module=='modbusTCPClient'" [config]="moduleConfigRoot.config"></app-modbus-tcp-ip>
+            <app-modbus-tcp-ip-server *ngIf="module=='modbusTCPServer'" [config]="moduleConfigRoot.config"></app-modbus-tcp-ip-server>
+            <app-eip-tags-config *ngIf="module=='EIPComm' || module=='EIPComm2' || module=='EIPComm3'" [config]="config" [tagsToRead]="tagsToRead" [tagsToWrite]="tagsToWrite"></app-eip-tags-config> 
+            <app-logic-config *ngIf="module=='userCode'" [config]="moduleConfigRoot.config" [moduleId]="moduleConfigRoot.uniqueId"></app-logic-config>
+            </div>
+         </div></mat-tab>
+        
+       </mat-tab-group>
+   </mat-card-content>
+</div>
+</mat-card>
+

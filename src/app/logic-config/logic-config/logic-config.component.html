@@ -1,0 +1,65 @@
+
+<div class="main-container">
+    <!-- <mat-slide-toggle [labelPosition]="'after'" class="example-margin" [checked]="darkMode" (toggleChange)="setTheme()"><i style='padding-left:5px;' class="fas fa-moon"></i></mat-slide-toggle> -->
+   
+    <div class="top-bar">
+        <button (click)="save()" class='btn' mat-icon-button matTooltip="Save Changes"><i class="fas fa-save"></i></button>
+        <!-- <ng-container *ngIf="status.debug">
+            <button (click)="stop()" class='btn' mat-icon-button matTooltip="Cancel Debug"><i class="fas fa-hand-paper"></i></button>
+            <div class="blink_me" *ngIf="status.debug">DEBUGGING</div>
+        </ng-container>
+        <ng-container *ngIf="!status.debug">
+            <button  (click)="compile()" class='btn' mat-icon-button matTooltip="Compile"><i class="fas fa-check"></i></button>
+            <button (click)="debug()"  class='btn' mat-icon-button matTooltip="Debug"><i class="fas fa-bug"></i></button>
+            <button (click)="save()" class='btn' mat-icon-button matTooltip="Save Changes"><i class="fas fa-save"></i></button> -->
+            <!-- <button [disabled]="status.status == 'LOADING' || status.status == 'OFFLINE' || status.status == 'UNKNOWN'" (click)="upload()"  class='btn' mat-icon-button matTooltip="Upload"><i class="fas fa-file-upload"></i></button> -->
+            <mat-divider style="margin: 8px 8px;" [vertical]="true"></mat-divider>
+
+            <!--Angel commented these two following lines, they were showing errors-->
+            <!--<button [disabled]="(status.status != 'STOPPED' && status.status != 'ERROR') || status.status == 'UNKNOWN' " (click)="run()" class='btn' mat-icon-button matTooltip="Run"><i class="fas fa-arrow-right"></i></button>-->
+            <!--<button [disabled]="(status.status != 'STARTING' && status.status != 'RUNNING') || status.status == 'UNKNOWN'" (click)="stop()" class='btn' mat-icon-button matTooltip="Stop"><i class="fas fa-stop"></i></button>-->
+            <!-- <div style="color: white; margin-top: 14px; 
+            margin-left: 1px;
+            margin-bottom: 14px;"  *ngIf="status.status == 'UNKNOWN'">Module has not been uploaded. Upload the module first to enable all actions on the left.</div>
+        </ng-container> -->
+        
+        <div class='status-box'>
+            
+            <div class='status-text'>
+                <div>{{status.status}}</div>
+                <mat-spinner *ngIf="status.status == 'LOADING'" [diameter]="18"></mat-spinner>
+                <mat-icon *ngIf="status.status != 'LOADING' && !status.debug">
+                    <i [ngClass]="(status.status == 'STOPPED' || status.status == 'ERROR' || status.status == 'STOPPING') ? 'stopped' : (status.status == 'RUNNING' || status.status == 'STARTING') ? 'running' : 'offline'" class="fad fa-circle"></i></mat-icon>
+                <mat-icon *ngIf="status.status != 'LOADING' && status.debug">
+                    <i [ngClass]="(status.status == 'STOPPED' || status.status == 'ERROR' || status.status == 'STOPPING') ? 'stopped' : (status.status == 'RUNNING' || status.status == 'STARTING') ? 'running' : 'offline'" class="fad fa-bug"></i></mat-icon>
+            </div>
+            
+        </div>
+    </div>
+    <div class="tab-group-container">
+    <mat-tab-group [disableRipple]="true" #matTabGroup [selectedIndex]="0" animationDuration="0ms" mat-align-tabs="start">
+        <mat-tab  label="Start"></mat-tab>
+        <mat-tab  label="Run"></mat-tab>
+        <mat-tab  label="Stop"></mat-tab>
+    </mat-tab-group>
+    <span [ngClass]="{'dark-mode': darkMode}">
+            <pre #editorWindow class='app_editor'  (contextmenu)="openActionsMenu($event)" (drop)="drop($event)"  id="editor"></pre> 
+            <div #dragger (mousedown)="onMouseDown($event)" id="editor_dragbar" class="app_editor_dragbar"></div>
+            <div #dragger (mousedown)="onMouseDown($event)" id="editor_dragbar" class="app_editor_dragbar"></div>
+            <div  #consoleWindow id="editor_console" class='app_editor_console'>
+                <div class="console-header">
+                <div class='console-label'>DEBUG CONSOLE</div>
+                <div class="buttons">
+                    <button (click)="clearConsole()" [matTooltipShowDelay]="500" matTooltip="Clear" [disableRipple]=true class='small-icon-button' mat-icon-button><i class="fal fa-ban"></i></button>
+                    <button [matTooltipShowDelay]="500" matTooltip="Close" [disableRipple]=true class='small-icon-button' (click)="closeConsole()" mat-icon-button><i class="fas fa-times"></i></button>
+                </div>
+                </div>
+                <div [ngClass]="(consoleText.scrollHeight > consoleText.offsetHeight) ? 'scroll-bottom': ''" #consoleText  id="console-text" class='console-text'>
+                    <p>
+                        {{console}}
+                    </p>
+                </div>
+            </div>
+    </span>
+</div>
+</div>

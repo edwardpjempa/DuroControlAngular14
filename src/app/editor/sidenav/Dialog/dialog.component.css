@@ -1,0 +1,15 @@
+.helper{
+    height: 20px;
+    width: 300px;
+    background-color: rgb(187, 187, 187);
+    display: inline-block;
+    float: right;
+    margin-bottom: 4px;
+}
+
+.functionCount {
+    margin: 0;
+    width: min-content;
+    white-space: nowrap;
+    display: inline-block;
+}

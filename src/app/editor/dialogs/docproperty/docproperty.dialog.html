@@ -1,0 +1,233 @@
+<div>
+    <h1 mat-dialog-title style="display:inline-block;cursor:move;" mat-dialog-draggable>View properties</h1>
+    <mat-icon (click)="onNoClick()" style="float:right;margin-right:-10px;margin-top:-10px;cursor:pointer;color:gray;">
+        <i class="far fa-times" style="font-size: 140%;"></i>
+    </mat-icon>
+    <mat-tab-group >
+        <mat-tab label="General" >
+            <div>
+
+                <mat-form-field class="my-form-field" style="display: inline-block;margin-bottom: 10px; margin-right: 18px; width: 100px; padding-top: 20px;">
+                    <mat-label>Width</mat-label>
+                    <span matPrefix>px &nbsp;</span>
+                    <input numberOnly matInput [(ngModel)]="data.width" type="number">
+                </mat-form-field>
+
+                <mat-form-field class="my-form-field" style="margin-bottom: 10px; float:right; width: 100px; padding-top: 20px;">
+                    <mat-label>Height</mat-label>
+                    <span matPrefix>px &nbsp;</span>
+                    <input numberOnly matInput [(ngModel)]="data.height" type="number">
+                </mat-form-field>
+            </div>
+
+            <div style="display: flex; justify-content: center;">
+
+                <mat-form-field class="sizeModeSlct" appearance="fill">
+                    <mat-label>Size Mode</mat-label>
+                    <mat-select [(ngModel)]="data.sizeMode">
+                        <mat-option value="normal">Normal</mat-option>
+                        <mat-option value="zoom">Zoom</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Styling" style="padding-top: 5px;">
+            <div style="padding-top: 10px">
+                <span style="font-weight: 500;">Font</span>
+                <div style="display: flex;">
+
+                    <div style="padding: 10px;">
+                        <mat-form-field class="selectField" floatLabel="never" >
+                            <mat-label>Style</mat-label>
+                            <mat-select  [(value)]="viewStyleProperties.fontFamily.data">
+                                <mat-option *ngFor="let option of viewStyleProperties.fontFamily.formOptions" [value]="option">
+                                    {{option.charAt(0).toUpperCase() + option.slice(1)}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="width: 100%; display: flex; justify-content: flex-end; padding: 10px;">
+                        <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                            <mat-label>Size</mat-label>
+                            
+                            <input numberOnly matInput [(ngModel)]="viewStyleProperties['fontSize.px'].data" type="number">
+                            <span matSuffix>px &nbsp;</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="width: 100%; display: flex; justify-content: flex-end; padding: 10px;">
+                        <mat-form-field class="selectField" floatLabel="never" style="width: 110px;">
+                            <mat-label>Weight</mat-label>
+                            <mat-select  [(value)]="viewStyleProperties['font-weight'].data">
+                                <mat-option *ngFor="let option of viewStyleProperties['font-weight'].formOptions" [value]="option">
+                                    {{option.charAt(0).toUpperCase() + option.slice(1)}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="width: 100%; display: flex; padding: 10px;">
+                
+                        <app-color-picker [colorInput]="viewStyleProperties.color.data" (colorOutput)="viewStyleProperties.color.data = $event;" style="width: 100px;"></app-color-picker>
+                    </div>
+                </div>
+
+                <!--<div style="padding-top: 10px; padding-bottom: 10px; display: flex;">
+
+                    <div class="alignment" style="display: flex; padding-right: 10px; width: 100%;" >
+                        <button mat-button matTooltip="Align text to the top of a text box." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['align-items'].data, 'flex-start')}">
+                            <i class="fal fa-arrow-to-top"></i>
+                        </button>
+                        <button mat-button matTooltip="Align text to the middle of a text box." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['align-items'].data, 'center')}">
+                            <i class="fal fa-arrows-v"></i>
+                        </button>
+                        <button mat-button matTooltip="Align text to the bottom of a text box." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['align-items'].data, 'flex-end')}">
+                            <i class="fal fa-arrow-to-bottom"></i>
+                        </button>
+                    </div>
+
+                    <div class="alignment" style="display: flex; padding-left: 10px; width: 100%; justify-content: flex-end;" >
+                        <button mat-button matTooltip="Align text to the left." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['justify-content'].data, 'flex-start')}">
+                            <i class="fal fa-align-left"></i>
+                        </button>
+                        <button mat-button matTooltip="Align text to the center." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['justify-content'].data, 'center')}">
+                            <i class="fal fa-align-center"></i>
+                        </button>
+                        <button mat-button matTooltip="Align text to the right." [ngClass]="{'align-button-active': AlignActive(viewStyleProperties['justify-content'].data, 'flex-end')}">
+                            <i class="fal fa-align-right"></i>
+                        </button>
+                    </div>
+                </div>-->
+
+                <mat-divider style="padding-bottom: 12px;"></mat-divider>
+
+                <span style="font-weight: 500;">Background</span>
+
+                <div style="display: flex;">
+                    <div style="width: 100%; padding: 10px; display: flex; align-items: center;">
+                    
+                        <app-color-picker [colorInput]="viewStyleProperties.backgroundColor.data" (colorOutput)="viewStyleProperties.backgroundColor.data = $event;" style="width: 100px;"></app-color-picker>
+                    </div>
+
+                    <div style="margin: 12px;" *ngIf="getTransparency()">
+                        <mat-checkbox class="editor_borderBtn" [(ngModel)]="data.editorBackgd">Show editor's default background</mat-checkbox>
+                    </div>
+                </div>
+
+                <mat-divider style="padding-bottom: 12px; margin-top: 5px;"></mat-divider>
+
+                <span style="font-weight: 500;">Borders</span>
+
+                <div style="display: flex;">
+
+                    <div style="padding: 10px;">
+                        <mat-form-field class="selectField" floatLabel="never" >
+                            <mat-label>Style</mat-label>
+                            <mat-select [(value)]="viewStyleProperties.borderStyle.data">
+                                <mat-option *ngFor="let option of viewStyleProperties.borderStyle.formOptions" [value]="option">
+                                    {{option.charAt(0).toUpperCase() + option.slice(1)}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="padding: 10px; display: flex; width: 100%;">
+                
+                        <app-color-picker [colorInput]="viewStyleProperties.borderColor.data" (colorOutput)="viewStyleProperties.borderColor.data = $event;" style="width: 100%;"></app-color-picker>
+                    </div>
+
+                    <div style="width: 100%; padding: 10px;">
+                        <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                            <mat-label>Width</mat-label>
+                            <input numberOnly matInput [(ngModel)]="viewStyleProperties['borderWidth.px'].data" type="number">
+                            <span matSuffix>{{viewStyleProperties['borderWidth.px'].suffix.width}} &nbsp;</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="padding: 10px; display: flex;">
+                
+                        <div style="width: 100%; display: flex;">
+                            <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                                <mat-label>Rounded Corners</mat-label>
+                                <input numberOnly matInput [(ngModel)]="viewStyleProperties['borderRadius.px'].data" type="number">
+                                <span matSuffix>{{viewStyleProperties['borderWidth.px'].suffix.corners}} &nbsp;</span>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="display: flex;" *ngIf="viewStyleProperties['borderWidth.px'].data === 0 || viewStyleProperties.borderStyle.data === 'none'">
+                
+                    <div style="margin: 12px;">
+                        <mat-checkbox class="editor_borderBtn" [(ngModel)]="data.editorBorder">Show editor's default borders</mat-checkbox>
+                    </div>
+                
+                </div>
+
+                <mat-divider style="padding-bottom: 12px;"></mat-divider>
+
+                <span style="font-weight: 500;">Shadow</span>
+
+                <div style="display: flex; margin-top: 18px;">
+
+                    <div style="width: 100%; padding: 10px;">
+
+                        <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; margin-right: 18px; width: 100px">
+                            <mat-label>V-offset</mat-label>
+                            <input numberOnly matInput [(ngModel)]="vOffest" type="number">
+                            <span matSuffix>{{viewStyleProperties.boxShadow.suffix.v_offset}} &nbsp;</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="width: 100%; padding: 10px;">
+
+                        <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                            <mat-label>H-offset</mat-label>
+                            <input numberOnly matInput [(ngModel)]="hOffest" type="number">
+                            <span matSuffix>{{viewStyleProperties.boxShadow.suffix.h_offset}} &nbsp;</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="width: 100%; padding: 10px;">
+
+                        <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                            <mat-label>Spread</mat-label>
+                            <input numberOnly matInput [(ngModel)]="spread" type="number">
+                            <span matSuffix>{{viewStyleProperties.boxShadow.suffix.spread}} &nbsp;</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div style="padding: 10px; width: 100%;">
+                
+                        <app-color-picker [colorInput]="shadowColor" (colorOutput)="shadowColor = $event;" style="width: 100%;"></app-color-picker>
+                    </div>
+
+                </div>
+                <div style="display: flex;">
+                    <div style="width: 100%; padding: 10px; display: flex;">
+                        <mat-slider class="blur_slider" type="range" (input)="blur = $event.value!;" min="0" max="100" [value]="blur"></mat-slider>
+
+                        <div style="padding: 10px;">
+                        
+                            <mat-form-field class="inputField" style="display: inline-block;margin-bottom: 10px; width: 100px">
+                                <mat-label>Blur</mat-label>
+                                <input numberOnly matInput [(ngModel)]="blur" type="number">
+                                <span matSuffix>{{viewStyleProperties.boxShadow.suffix.blur}} &nbsp;</span>
+                            </mat-form-field>
+                        
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+    <div mat-dialog-actions class="dialog-action">
+        <button mat-raised-button (click)="onNoClick()">CANCEL</button>
+        <button mat-raised-button color="primary" (click)="onOkClick()" [mat-dialog-close]="data" cdkFocusInitial>OK</button>
+    </div>
+</div>

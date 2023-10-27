@@ -1,0 +1,129 @@
+<div *ngIf="config" style="margin-left: 5px; min-width: 350px" id="mainn">
+   <div style="display: flex; flex-wrap: wrap; width:60%; justify-content: space-between;">
+      <mat-form-field appearance="standard" style="height: 54px; flex: 0 40%">
+         <mat-label> Enable Tag  <span style="float: right;" id="statusTagValue"></span></mat-label>
+         <input matTooltip="Number Tag" matTooltipPosition="above"
+            placeholder="Enable Tag"
+            value="{{ config.enable }}"
+            matInput
+            [(ngModel)]="config.enable"
+         />
+      </mat-form-field>
+      <mat-form-field appearance="standard" style="height: 54px; flex: 0 40%">
+         <mat-label>PLC IP</mat-label>
+         <input
+            placeholder="PLC IP"
+            value="{{ config.PLCIP }}"
+            matInput
+            [(ngModel)]="config.PLCIP"
+         />
+      </mat-form-field>
+   </div>
+   <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+   <mat-form-field style="flex: 0 30%; " >
+      <mat-label>Message OK Counter Tag  <span style="float: right;" id="msgsOkCount"></span></mat-label>
+      <input matTooltip="Number Tag" matTooltipPosition="above"
+         placeholder="Message OK Tag"
+         value="{{ config.msgsOk }}"
+         matInput
+         [(ngModel)]="config.msgsOk"
+      />
+   </mat-form-field>
+   <mat-form-field style="flex: 0 30%;">
+      <mat-label>Message Error Counter Tag  <span style="float: right;" id="msgsErrCount"></span></mat-label>
+      <input matTooltip="Number Tag" matTooltipPosition="above"
+         placeholder="Message Error Tag"
+         value="{{ config.msgsErr }}"
+         matInput
+         [(ngModel)]="config.msgsErr"
+      />
+   </mat-form-field>
+   <mat-form-field style="flex: 0 30%;">
+      <mat-label>Message Error Tag</mat-label>
+      <input matTooltip="Text Tag" matTooltipPosition="above"
+         placeholder="Message Error Tag"
+         value="{{ config.lastErr }}"
+         matInput
+         [(ngModel)]="config.lastErr"
+      />
+   </mat-form-field>
+   </div>
+   <mat-accordion *ngIf="config != undefined">
+      <mat-expansion-panel>
+         <mat-expansion-panel-header [ngClass]="{ highlightTabColor: error == 'read'}">
+            <mat-panel-title style="justify-content: space-between;"><p style="margin: 0;">Tags To Read</p><p style="margin: 0;">Total Tags: {{tagsToReadCount}}</p></mat-panel-title>
+         </mat-expansion-panel-header>
+         <button (click)="addNewRow()" mat-icon-button matTooltip="Add Row">
+            <i class="fas fa-plus"></i>
+         </button>
+         <button
+            (click)="changeState()"
+            mat-icon-button
+            matTooltip="{{ editState ? 'Done' : 'Edit' }}"
+         >
+            <i [ngClass]="editState ? 'fas fa-check' : 'fas fa-edit'"></i>
+         </button>
+         <button
+            (click)="deleteSelected()"
+            *ngIf="editState && selection.selected.length > 0"
+            mat-icon-button
+            matTooltip="Delete"
+         >
+            <i class="fas fa-trash-alt"></i>
+         </button>
+         <mat-accordion cdkDropListGroup multi="false">
+            <div
+               class="centered"
+               *ngFor="let tagGroup of dataSourceRead; index as groupIndex; let i = index"
+            >
+               <mat-checkbox
+                  *ngIf="editState"
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(tagGroup) : null"
+                  [checked]="selection.isSelected(tagGroup)"
+               >
+               </mat-checkbox>
+               <mat-expansion-panel
+                  #groupPanel
+                  (mouseenter)="mouseEnterHandler($event, groupPanel)"
+               >
+                  <mat-expansion-panel-header [ngClass]="{ highlightTabColor: i == errorGroup}">
+                     <mat-panel-title>
+                        <mat-panel-title style="justify-content: space-between;"><p style="margin: 0;">Group {{ groupIndex + 1 + pageSizeRead * pageIndexRead }}</p>
+                           <p style="margin: 0;">Total Tags: {{tagGroup.length}}</p></mat-panel-title>
+                     </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-divider></mat-divider>
+                  <app-editable-table
+                     [field]="'destination'"
+                     [panel]="groupPanel"
+                     (dragUpdate)="dragging = $event"
+                     [dataSource]="tagGroup"
+                  ></app-editable-table>
+               </mat-expansion-panel>
+            </div>
+         </mat-accordion>
+         <mat-paginator
+            *ngIf="tagsToRead.length > 0"
+            [length]="lengthRead"
+            [pageIndex]="pageIndexRead"
+            [pageSize]="pageSizeRead"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="getTagsToReadData($event)"
+         >
+         </mat-paginator>
+      </mat-expansion-panel>
+      <mat-expansion-panel #writePanel>
+         <mat-expansion-panel-header [ngClass]="{ highlightTabColor: error == 'write'}">
+            <mat-panel-title style="justify-content: space-between;"><p style="margin: 0;">Tags To Write</p><p style="margin: 0;">Total Tags: {{lengthWrite}}</p></mat-panel-title>
+         </mat-expansion-panel-header>
+         <app-editable-table
+            [field]="'source'"
+            [panel]="writePanel"
+            (dragUpdate)="dragging = $event"
+            [dataSource]="tagsToWrite"
+            [config]="config"
+         ></app-editable-table>
+      </mat-expansion-panel>
+   </mat-accordion>
+</div>

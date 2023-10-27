@@ -1,0 +1,45 @@
+<button (click)="addNewRow()" mat-icon-button matTooltip="Add Row"><i class="fas fa-plus"></i></button>
+<button (click)="changeState()" mat-icon-button matTooltip="{{(editState) ? 'Done' : 'Edit'}}">
+   <i [ngClass]="(editState) ? 'fas fa-check' : 'fas fa-edit'"></i>
+</button>
+<button (click)=deleteSelected() *ngIf="editState && selection.selected.length > 0" mat-icon-button matTooltip="Delete"><i class="fas fa-trash-alt"></i></button>
+
+<table class="eip-table">
+   <tbody cdkDropList  [cdkDropListData]="dataSource" (cdkDropListDropped)="drop($event)" >
+      <tr>
+         <th class="check-col">
+            <div *ngIf="editState">
+               <mat-checkbox (change)="$event ? masterToggle() : null"
+               [checked]="selection.hasValue() && isAllSelected()"
+               [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+            </div>
+         </th>
+         <th class="source-col">Source</th>
+         <th class="destination-col">Destination</th>
+      </tr>
+      <tr    *ngFor="let tag of dataSource, index as index" cdkDrag [cdkDragDisabled]="editState" 
+      (cdkDragStarted)="dragUpdate.next(true)" (cdkDragDropped)="dragUpdate.next(false)" [cdkDragData]="tag" [id]="'TAG'+tag['source']">
+      <div *cdkDragPlaceholder class="row-placeholder"></div>
+         <td>
+            <div *ngIf="editState">
+               <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(tag) : null"
+                            [checked]="selection.isSelected(tag)">
+               </mat-checkbox>
+               </div>
+            <div *ngIf="!editState">
+               <button class="cdk-drag-icon" cdkDragHandle mat-icon-button matTooltip="Drag">
+                  <i class="fas fa-bars"></i>
+               </button>
+            </div>
+         </td>
+         <td (dragover)="$event.preventDefault()" *ngFor="let column of columns" style="overflow-x: hidden;">
+            <ng-container *ngIf="editState; else viewState">
+               <input (change)="inputChanged($event, index, column)"  [(ngModel)]=tag[column] value="{{tag[column]}}">
+           </ng-container>
+           <ng-template #viewState style="overflow-x: scroll;">{{tag[column]}}</ng-template>
+         </td>
+      </tr>
+   </tbody>
+</table>

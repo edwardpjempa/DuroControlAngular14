@@ -1,0 +1,49 @@
+.mat-tree-node:empty {
+  display: none;
+}
+
+/* left panel */
+/* --------------- */
+.leftbar-panel {
+  padding: 0px 0px 0px 0px;
+  font-size: 12px;
+  overflow: auto;
+  overflow-x: hidden;
+  //max-height: 200px;
+}
+
+.view-panel {
+  //max-height: 400px;
+  overflow: auto;
+}
+
+.workarea-leftbar-h {
+  max-height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 12px;
+  padding-right: 10px;
+}
+
+.view_expansionPanel .mat-expansion-panel-body{
+  padding: unset;
+}
+
+.objs_expansionPanel .mat-expansion-panel-body {
+  padding: 0;
+}
+
+.properties_expansionPanel .mat-expansion-panel-body {
+  padding: unset;
+}
+/* --------------- */
+
+.search-active {
+  background-color: whitesmoke;  
+  border-radius: 4px;
+}
+
+.custom-modalbox{
+  position: fixed !important;
+  left: 12px;
+}

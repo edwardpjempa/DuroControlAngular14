@@ -1,0 +1,64 @@
+<div style="padding: 3px;" [ngStyle]="config.style">
+    <div style="height: 22px; padding: 3px; display: flex; align-items: center; border-radius: 4px;" [ngStyle]="dispStyle()">
+        <span id="text" style="height: 100%; width: 376px; overflow-x:scroll; white-space: nowrap;" *ngIf="!secureInput">{{lastInput}}</span>
+        <span id="text" style="height: 100%; width: 376px; overflow-x:scroll; white-space: nowrap;" *ngIf="secureInput">{{lastInputStard}}</span>
+    </div>
+    
+    <div *ngFor="let set of Chars; let i = index" style="display: flex; justify-content: center;">
+
+        <div *ngIf="i == 2">
+            <button  style="margin: 2px; width: 46px; height: 24px;"
+                (click)="enterCharacter('caps')"
+                >
+                {{'Caps'}}
+            </button>
+        </div>
+        <div *ngIf="i == 3">
+            <button  style="margin: 2px; width: 46px; height: 24px;"
+                (click)="enterCharacter('shift')"
+                >
+                {{'Shift'}}
+            </button>
+        </div>
+        <button *ngFor="let char of set" style="margin: 2px; width: 26px; height: 24px;"
+                [id]="char"
+                (click)="enterCharacter(char)"
+                >
+            {{char}}
+        </button>
+
+        <div *ngIf="i == 0">
+            <button  style="margin: 2px; width: 46px; height: 24px;"
+                (click)="enterCharacter('←')"
+                >
+                {{'←'}}
+            </button>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <button style="margin: 2px; width: 290px; height: 24px; font-size: 10px;"
+                (click)="enterCharacter(' ')"
+                >
+            {{' '}}
+        </button>
+    </div>
+
+    <!--<div *ngFor="let set of keyboardFunctionsChars" style="display: flex; justify-content: center;">
+        <button *ngFor="let char of set" style="margin: 2px; width: 290px; height: 24px; font-size: 10px;"
+                [id]="char"
+                (click)="enterCharacter(char)"
+                >
+            {{char}}
+        </button>
+    </div>-->
+    
+    <div style="display: flex; padding-top: 10px; justify-content: flex-end;">
+        <button  style="margin: 2px; width: 41px; height: 24px; font-size: 8px; padding: 0;"
+            (click)="eventfunctions.cancel()">CANCEL
+        </button>
+        <button  style="margin: 2px; width: 41px; height: 24px; font-size: 8px;"
+            (click)="eventfunctions.enter(lastInput)">ENTER
+        </button>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+.module-title {
+    padding: 30px 30px 0px 30px;
+ 
+ }
+
+.invisibleBox{
+    margin: 21px; 
+    width: min-content;
+    display: inline-grid;
+}
+.timeBox{
+    background-color: rgba(63, 81, 181, 0.851);
+    width: min-content; 
+    padding: 10px; 
+    width: 230px;
+    height: 113px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 15px;
+}
+
+.ipBox{
+    background-color: rgba(63, 81, 181, 0.851);
+    width: min-content; 
+    padding: 10px; 
+    width: 270px;
+    height: 113px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 15px;
+}
+
+.dateHeader{
+    margin-top: 5px;
+    text-align: center;
+    margin-bottom: 0px;
+    white-space: nowrap;
+    font-weight: 430;
+    font-size: 19px;
+    height: 32px;
+    color: white;
+}
+
+.timeHeader{
+    margin-top: 2px;
+    margin-bottom: 18px;
+    white-space: nowrap;
+    font-weight: 430;
+    font-size: 19px;
+    height: 32px;
+    color: white;
+    display: inline-block;
+    width: 120px;
+    text-align: end;
+}
+.utcHeader{ 
+    margin-left: 5px;
+    text-align: left;
+    width:100px;
+    margin-top: 2px;
+    margin-bottom: 18px;
+    white-space: nowrap;
+    font-weight: 370;
+    font-size: 14px;
+    height: 30px;
+    color: white;
+    display: inline-block;
+}
+
+.setTimeButton {
+    margin-left: 21px;
+    width: 100px;
+    height: 22px;
+    padding: 0;
+    border-width: 0px;
+    border-radius: 19px; 
+    font-weight: 480;
+    font-size: 14px;
+    background-color: aliceblue;
+}
+
+.spann{
+    display: inline-block;
+    padding: 2px;
+}
+
+:host ::ng-deep .custom-spinner circle{   
+    stroke: #ffffff;
+}
+
+
+
+::ng-deep.mat-dialog-container{
+        padding: 20px !important;
+        border-radius: 10px !important;
+    }

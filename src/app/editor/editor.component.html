@@ -1,0 +1,268 @@
+<div id="editor_container">
+    <div class="u-loading">
+
+        <div class="loading-spinner" *ngIf="isLoading">
+            <mat-progress-spinner diameter=65 strokeWidth="9" mode="indeterminate"></mat-progress-spinner> 
+        </div> 
+
+        <mat-drawer-container class="workarea-container">
+            <mat-drawer #e_sidenav id ="e_sidenav" mode="side" [opened]="editor_sidenav"  (opened)="onResize()" (closed)="onResize()" class="svg-sidenav leave-header-area" style="width: 270px;">
+                <mat-accordion multi="true">
+
+                    <e-sidenav [selections]="selections" [currentView]="currentView" [viewsTree]="configDataService.hmi.general.viewsTree" [hmi]="configDataService.hmi" [panelsState]="panelsState"
+                    
+                        [trackBy]="{trackViewsByLength: configDataService.hmi.general['viewsTree'].length, trackComponentByLength: currentView['components'].length, trackByProperties:{trackSelectByLength: selections.length, trackById: eservice.compId, h: eservice.h, w: eservice.w, x: eservice.x, y: eservice.y, rotationAngle: eservice.rotationAngle}}"
+
+                        (onViewsPanel)="onViewsPanel = $event;" 
+                        (onSelectView)="onSelectView($event)" (onPropertyView)="onPropertyView($event)" (onCloneView)="onCloneView($event)" (onAddView)="onAddView()"
+                        
+                        (objSelectionOutput)="onSlectdComp($event)"
+                        
+                        (onEdition)="panelsState.propertiesOnEdition = $event">
+                    </e-sidenav>
+                </mat-accordion>
+            </mat-drawer>
+
+            <mat-drawer-content>
+
+                <div id="mainContainer" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                    display: flex; height: 100%; width: 100%; background: #eee;">
+
+                    <div class="container">
+                        
+                        <div class="header">
+                            <nav>
+                                <div style="padding-top: 3px; padding-bottom: 3px; display: flex; background: #fafafa; width: 100%;">
+                
+                                    <!--Project tools-->
+                                    <div style="padding-right: 10px;border-left: #ffffff00; border-left-style: solid; height: auto;">
+            
+                                        <button mat-icon-button matTooltip="Project"  [matMenuTriggerFor]="menuProject"  class="">
+                                            <i class="fad fa-file" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <mat-menu #menuProject="matMenu" class="leftbar-item-menu">
+                                            <button mat-menu-item (click)="newProject()">
+                                                <i class="fad fa-file-plus"></i>
+                                                <span style="padding-left: 12px;">New Project</span>
+                                            </button>
+                                            <button mat-menu-item (click)="eservice.onOpenProject()">
+                                                <i class="fad fa-folder-open"></i>
+                                                <span style="padding-left: 12px;">Open Project</span>
+                                            </button>
+                                            <!--<button mat-menu-item (click)="eservice.saveToPC(configDataService.hmi)">
+                                                <i class="fad fa-save"></i>
+                                                <span style="padding-left: 12px;">Save Project</span>
+                                            </button>-->
+                                        </mat-menu>
+                                        <input type="file" #projectFileOpenInput style="display: none" id="projectFileUpload" (click)="$event.stopPropagation()" (change)="onProjectFileChangeListener($event)" accept=".json" />
+            
+                                        <button mat-icon-button matTooltip="Save Project"  [matMenuTriggerFor]="menuSave"  class="">
+                                            <i class="fad fa-save" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <mat-menu #menuSave="matMenu" class="leftbar-item-menu">
+                                            <button mat-menu-item (click)="saveProject()">Save Project</button>
+                                            <button mat-menu-item (click)="eservice.saveToPC(configDataService.hmi)">Save to PC</button>
+                                        </mat-menu>
+                                    </div>
+                                    <div style="border-left: #26269ced; border-left-style: solid; height: auto;">
+                                        <button mat-icon-button matTooltip="Undo" (click)="undo(currentView)" [disabled]="!history.showUndo">
+                                            <i class="fad fa-undo" style="font-size: 120%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Redo" (click)="redo(currentView)" [disabled]="!history.showRedo">
+                                            <i class="fad fa-redo" style="font-size: 120%; vertical-align: baseline;"></i>
+                                        </button>
+                                    </div>
+                                    <div style="border-left: #26269ced; border-left-style: solid; height: auto;">
+                                        <button mat-icon-button matTooltip="Copy" (click)="eservice.copy(selections, currentView)" [disabled]="!eservice.showCopy">
+                                            <i class="far fa-copy" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Paste" (click)="paste(currentView)" [disabled]="!eservice.showPaste">
+                                            <i class="far fa-paste" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Delete" (click)="eservice.delete(selections, currentView, configDataService.hmi);" [disabled]="!eservice.showDelete">
+                                            <i class="fad fa-trash-alt" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                    </div>
+                                    <!--Component tools-->
+                                    <div *ngIf="eservice.component_toolPanel" style="border-left: #26269ced; border-left-style: solid; height: 40px;">
+                                        <button mat-icon-button matTooltip="Bring to Front" (click)="eservice.moveTop(selections, currentView, configDataService.hmi)">
+                                            <i class="fal fa-bring-front" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Send to Back" (click)="eservice.moveBottom(selections, currentView, configDataService.hmi)">
+                                            <i class="fal fa-send-back" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                        <mat-form-field class="selectField" style="padding-left: 15px; padding-right: 10px; width: 110px;">
+                                            <mat-label>Align</mat-label>
+                                            <mat-select name="componentAlign">
+                                                <!--<mat-option></mat-option>-->
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('left', selections, currentView)">Left</mat-option>
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('center', selections, currentView)">Center</mat-option>
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('right', selections, currentView)">Right</mat-option>
+                                                <mat-divider style="margin-top: 5px; margin-bottom: 5px; margin-left: 6px; margin-right: 6px;"></mat-divider>
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('top', selections, currentView)">Top</mat-option>
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('middle', selections, currentView)">Middle</mat-option>
+                                                <mat-option class="alignOption" (click)="eservice.alignComponent('bottom', selections, currentView)">Bottom</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <!--Layout settings-->
+                                    <div style="border-left: #26269ced; border-left-style: solid; height: auto;">
+                                        <button mat-icon-button matTooltip="Layout Settings" (click)="layoutSettings(currentView)">
+                                            <i class="fad fa-cog" style="font-size: 130%; vertical-align: baseline;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+
+                        <!--Workspace-->
+                        <div id="content_main" class="content">
+                            <div style="z-index: 10000000; position: absolute; width: 60px; bottom: 5px; right: 7px; background-color: #d3d3d3a7; border-radius: 30px; height: 60px;">
+                                <div style="margin-top: 2px; display: flex; justify-content: center;">
+                                    <button style="display: flex; opacity: 0.65; width: 18px; justify-content: center;" (click)="move($event, 'up')">
+                                        <i class="fas fa-arrow-alt-up fa-xs" style="opacity: 0.85;"></i>
+                                    </button>
+                                </div>
+                                <div style="display: flex; justify-content: center;">
+                                    <button style="display: flex; opacity: 0.65; width: 18px; justify-content: center; margin-right: 9px;" (click)="move($event, 'left')">
+                                        <i class="fas fa-arrow-alt-left fa-xs" style="opacity: 0.85;"></i>
+                                    </button>
+                                    <button style="display: flex; opacity: 0.65; width: 18px; justify-content: center; margin-left: 9px;" (click)="move($event, 'right')">
+                                        <i class="fas fa-arrow-alt-right fa-xs" style="opacity: 0.85;"></i>
+                                    </button>
+                                </div>
+                                <div style="display: flex; justify-content: center;">
+                                    <button style="display: flex; opacity: 0.65; width: 18px; justify-content: center;" (click)="move($event, 'down')">
+                                        <i class="fas fa-arrow-alt-down fa-xs" style="opacity: 0.85;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="workspace" #workspace (click)="clickout($event, zoomVal)" (mousedown)="clickdown($event, zoomVal)" class="child" style="top: 50%; left: 50%;
+                                position: absolute; transform: translate(-50%, -50%)" [ngStyle]="viewProperties">
+                                
+                                <app-hmi-c-view [viewInfo]="currentView"></app-hmi-c-view>
+                            
+                                <!--<div *ngFor="let control of currentView['components'];let indexOfelement=index;">
+                            
+                                    <ng-container [ngSwitch] = "control.config.type">
+                                        <ng-container *ngSwitchCase="'button'" [ngTemplateOutlet]="button"></ng-container>
+                                        <ng-container *ngSwitchCase="'slider'" [ngTemplateOutlet]="slider"></ng-container>
+                                        <ng-container *ngSwitchCase="'dropdown'" [ngTemplateOutlet]="dropdown"></ng-container>
+                                        <ng-container *ngSwitchCase="'input'" [ngTemplateOutlet]="input"></ng-container>
+                                    </ng-container>
+                                    
+                                    <ng-template #button>
+                                        <ctl-button [id]="control.id" [buttonConfig]="control.config" (btnOutput)="this[control.function]($event)"></ctl-button>
+                                    </ng-template>
+                                    
+                                </div>-->
+                        
+                                <!--[style.transform]="'translate3d('+selection.translate.x+'px, '+selection.translate.y+'px, '+selection.translate.z+'px) '+'rotate('+selection.rotationAngle+'deg)'"-->
+                                <div *ngFor="let selection of selections; let i = index">
+                                    <div #parentSelect id="parentSelect" [ngStyle]="selection.style" class='resizable' *ngIf="selection.childOn" (click)="onSlectdComp(selection)"
+                                        [style.top.px]='selection.y' [style.left.px]='selection.x' [style.width.px]='eservice.selectionDimen(selection,"width", configDataService.hmi)' 
+                                        [style.height.px]='eservice.selectionDimen(selection,"height", configDataService.hmi)' [class.hovered]="selection.hovered" 
+                                        (mousedown)='onComponentSelection($event); clickdown($event, zoomVal);' (mouseover)="onMouseOver($event)" cdkDrag (cdkDragStarted)="dragStarted($event,i)" 
+                                        [cdkDragConstrainPosition]="dragConstrainPoint" (cdkDragEnded)="dragEnded($event,i)" (cdkDragMoved)="onDragging($event,i)">
+                            
+                                        <div style="height: 100%; width: 100%;" [style.transform]="'rotate('+selection.rotationAngle+'deg)'">
+                                            <div class='resizers' (mouseout)="onMouseOut($event)" >
+                                                
+                                                <div (mousedown)='rotateClick($event, canvas)' id='chat-center-resize' class='rotation center'></div>
+                                                <div *ngIf="selection.sizeMode !== 'normal'" (mousedown)='onCornerClick($event, topLeftResize)' id='chat-top-left-resize' class='resizer top-left'></div>
+                                                <div *ngIf="selection.sizeMode !== 'normal'" (mousedown)='onCornerClick($event, topRightResize)' id='chat-top-right-resize' class='resizer top-right'></div>
+                                                <div *ngIf="selection.sizeMode !== 'normal'" (mousedown)='onCornerClick($event, bottomLeftResize)' id='chat-bottom-left-resize' class='resizer bottom-left'></div>
+                                                <div *ngIf="selection.sizeMode !== 'normal'" (mousedown)='onCornerClick($event, bottomRightResize)' id='chat-bottom-right-resize' class='resizer bottom-right'></div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <canvas  (dblclick)="onPropertyView(currentView.id)" id="canvas" class="canvas" [width]="view.config.width" [height]="view.config.height" #canvas (mousemove)="eservice.updateDraw($event, canvas, currentView)"></canvas>
+                                
+                            </div>
+                        </div>
+
+                        <!--Footer-->
+                        <div class="footer" style="background-color: #fafafa;">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="position: absolute;">
+                                <i class="fal fa-ellipsis-v-alt" style="font-size: 120%;"></i>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                            
+                                <!--<button mat-menu-item>
+                                    <mat-icon>add</mat-icon>
+                                    <span>Add element</span>
+                                </button>-->
+                            
+                                <button mat-menu-item [matMenuTriggerFor]="controls">
+                                    <i class="fal fa-plus-circle" style="font-size: 130%;"></i>
+                                    <span style="padding-left: 5px;
+                                    "> Add component</span>
+                                </button>
+                            </mat-menu>
+                            
+                            <mat-menu #controls="matMenu">
+                                <button mat-menu-item (click)="addComponent('button', '');">Button</button><!--$event.stopPropagation();-->
+                                <button mat-menu-item (click)="addComponent('image', '');">Image</button>
+                                <button mat-menu-item (click)="addComponent('keyboard', '');">Keyboard</button>
+                                <button mat-menu-item (click)="addComponent('numericInput', '');">Keypad</button>
+                                <button mat-menu-item (click)="addComponent('label', '');">Label</button>
+                                <button mat-menu-item (click)="addComponent('level', '');">Level</button>
+                                <button mat-menu-item (click)="addComponent('dropdown', '');">Dropdown</button>
+                                <button mat-menu-item (click)="addComponent('table', '');">Table</button>
+                                <button mat-menu-item [matMenuTriggerFor]="modules">Modules</button>
+                                <button mat-menu-item (click)="addComponent('slider', '');">Slider</button>
+                                <button mat-menu-item [matMenuTriggerFor]="views">View</button>
+                                <button mat-menu-item [matMenuTriggerFor]="charts">Charts</button>
+
+                            </mat-menu>
+
+                            <mat-menu #modules="matMenu">
+                                <button mat-menu-item (click)="addComponent('camera', '');">Camera</button>
+                                <button mat-menu-item (click)="addComponent('rfid', '');">RFID</button>
+                            </mat-menu>
+
+                            <mat-menu #charts="matMenu">
+                                <button mat-menu-item (click)="addComponent('lineChart', '');">Line Chart</button>
+                                <button mat-menu-item (click)="addComponent('barChart', '');">Bar Chart</button>
+                            </mat-menu>
+
+                            <mat-menu #views="matMenu">
+                                <div *ngFor="let view of configDataService.hmi.views; let i = index" style="display: flex;">
+
+                                    <div *ngIf="viewsRecursionChk(view)" style="width: 100%;">
+                                        <button mat-menu-item (click)="addComponent('view', view);" style="width: 100%;">{{view.name}}</button><!--$event.stopPropagation();-->
+                                    </div>
+
+                                    <span *ngIf="configDataService.hmi.views.length === 1 && view.id === currentView.id" style="padding: 10px;">No views available at this time.</span>
+                                </div>
+                            </mat-menu>
+                        
+                            <!-- Zoom buttons -->
+                            <div class="zoom-menu" >
+
+                                <mat-slider class="zoom_slider" type="range" min="{{zoomMin}}" max="{{zoomMax}}"  (input)="onZoomChange($event.value);" [value]="zoomVal"></mat-slider>
+
+                                <mat-form-field class="zoom_select">
+                                    <mat-label>Zoom</mat-label>
+                                    <input matInput type="text" [(ngModel)]="zoomVal" readonly [matMenuTriggerFor]="menuZoom">%
+                                </mat-form-field>
+
+                                <mat-menu #menuZoom="matMenu" >
+                                    <div *ngFor="let zoomScale of zoomScales;">
+
+                                        <button mat-menu-item (click)="zoomSelect(zoomScale.rawVal); $event.stopPropagation();">{{zoomScale.viewVal}}</button>
+                                    </div>
+                                </mat-menu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </mat-drawer-content>
+
+        </mat-drawer-container>
+    </div>
+</div>

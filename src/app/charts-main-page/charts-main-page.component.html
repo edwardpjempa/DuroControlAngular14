@@ -1,0 +1,128 @@
+<div class="row">
+   <div class="col1">
+      <div class="subrow">
+         <h1>Preconfigured Charts</h1>
+         <table>
+            <thead>
+               <tr>
+                  <button matSuffix mat-icon-button matTooltip="Add new chart" (click)="addChart()"> 
+                     <i class="fad fa-plus"></i>
+                 </button>
+                  <td>Chart Name</td>
+               </tr>
+            </thead>
+            <tbody>
+               <tr *ngFor="let chart of configDataService.configFile.charts; let i = index" (click)="setCurrentChart(chart.id)"
+               [ngClass]="{'selected' : chart == currentChart}" >
+                  <td class="icon-column" (click)="removeChart(chart.id); $event.stopPropagation();"><i class="fas fa-trash-alt"></i></td>
+                  
+                  <td *ngIf="!chartsLocalValues[i].onEdit" (dblclick)="onChartRename(i, inputRename)">{{chart.name}}</td>
+
+                  <td [style.display]="chartsLocalValues[i].onEdit ? 'block' : 'none'">
+                     <input #inputRename [style.display]="chartsLocalValues[i].onEdit ? 'initial' : 'none'" type="text" [(ngModel)]="chart.name" (click)="$event.stopPropagation()" 
+                     (blur)="chartsLocalValues[i].onEdit = false;" (keydown.enter)="inputRename.blur();">
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+
+      <div class="subrow" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+         <h1>Tags List</h1>
+
+         <table >
+            <thead>
+               <tr>
+                  <td  class="icon-column"></td>
+                  <td>Tag</td>
+                  <td>Axis</td>
+               </tr>
+            </thead>
+            <tbody>
+               <tr *ngFor="let tag of currentChart?.tags">
+                  <td class="icon-column" (click)="removeTag(tag)"><i class="fas fa-trash-alt"></i></td>
+                  <td>{{tag.tag}}</td>
+                  <td (click)="changeAxis(tag)">{{tag.axis}}</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </div>
+   <div class="col2">
+      <div class="canvas-div" id="canvas-div">
+
+         <!--<canvas baseChart 
+            [datasets]="lineChartData" 
+            [labels]="lineChartLabels" 
+            [options]="lineChartOptions"
+            [colors]="lineChartColors" 
+            [legend]="lineChartLegend" 
+            [chartType]="lineChartType" 
+            [plugins]="lineChartPlugins">
+         </canvas>-->
+         
+         <canvas *ngIf="currentChart" baseChart 
+            [datasets]="lineChartData" 
+            [options]="lineChartOptions"
+            [chartType]="lineChartType"
+            [legend]="lineChartLegend"
+            [plugins]="lineChartPlugins">
+         </canvas>
+
+         <div *ngIf="!currentChart" class="no-selection">
+            <span>Select or create a new chart</span>
+         </div>
+
+         <!--<canvas id="examChart"  ></canvas>-->
+      </div>
+
+      <div class="settings-div">
+
+         <div style="padding: 10px;">
+            <div>
+               <mat-form-field appearance="fill" (change)="onParamChange();" (keydown.enter)="onParamChange();" style="width: 150px;">
+                  <mat-label>Minutues in the past</mat-label>
+                  <input numericOnly matInput type="number" [(ngModel)]="minutesInPast" [disabled]="!currentChart">
+               </mat-form-field>
+
+               <!--<mat-form-field>
+                  <input matInput
+                    [matDatepicker]="picker"
+                    placeholder="Different locale"
+                    (dateChange)="setDate($event.value)">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker [startAt]="date" #picker></mat-datepicker>
+               </mat-form-field>-->
+               <!--<form  [formGroup]="testForm" style="display: contents;">
+
+                  <mat-form-field class="mr-sm-24" >
+                     <input matInput [matDatepicker]="picker" placeholder="Date"
+                                    autocomplete="off"
+                                    name="date" formControlName="date" (dateChange)="setDate($event.value)">
+                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                     <mat-datepicker  [startAt]="date" #picker></mat-datepicker>
+                  </mat-form-field>
+               </form>-->
+
+               <!--<input type=time (change)="onParamChange1($event);" [(ngModel)]="time">-->
+
+               <mat-form-field appearance="fill" (change)="onParamChange();" (keydown.enter)="onParamChange();" style="padding-left: 10px; padding-right: 10px; width: 150px;">
+                  <mat-label>Refresh Time</mat-label>
+                  <input numericOnly matInput type="number" [(ngModel)]="refreshTime" [disabled]="!currentChart">
+              </mat-form-field>
+
+              <button *ngIf="refreshStopped" mat-raised-button color="primary" (click)="start_stopRefresh('start'); refreshStopped = false" [disabled]="!currentChart">
+                  <i class="fad fa-play"></i>
+                  Start
+               </button>
+
+               <button *ngIf="!refreshStopped" mat-raised-button color="primary" (click)="start_stopRefresh('stop'); refreshStopped = true" [disabled]="!currentChart">
+                  <i class="fad fa-stop"></i>
+                  Stop
+               </button>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

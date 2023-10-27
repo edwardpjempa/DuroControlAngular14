@@ -1,0 +1,45 @@
+<div style="width: inherit">
+    <div (click)="$event.stopPropagation();">
+        <div (click)="$event.stopPropagation();" matTooltip="Shadow Picker" [matMenuTriggerFor]="shadowPicker" style="height:24px; background: #b0b0b069; width: inherit;" [ngStyle]="{'box-shadow': shadowInputData}"></div>
+    </div>
+
+    <mat-menu #shadowPicker="matMenu">
+
+        <div style="padding: 5px; display: flex; flex-flow: row;" (click)="$event.stopPropagation();">
+            <!--Hoffset field-->
+            <mat-form-field class="inputField" (change)="onParamChange();" (keydown)="$event.stopPropagation()" (keyup)="onParamChange(); $event.stopPropagation()" floatLabel="never" style="width: 85px; padding-left: 10px; padding-right: 10px;">
+                <input matInput type="number" placeholder="H-offset" [(ngModel)]="shadowData.h_offset" required>
+                <span matSuffix *ngIf="suffixData.h_offset">{{suffixData.h_offset}}</span>
+            </mat-form-field>
+
+            <!--Voffset field-->
+            <mat-form-field class="inputField" (change)="onParamChange();"  (keydown)="$event.stopPropagation()" (keyup)="onParamChange(); $event.stopPropagation()" floatLabel="never" style="width: 85px; padding-left: 10px; padding-right: 10px;">
+                <input matInput type="number" placeholder="V-offset" [(ngModel)]="shadowData.v_offset" required>
+                <span matSuffix *ngIf="suffixData.v_offset">{{suffixData.v_offset}}</span>
+            </mat-form-field>
+            
+        </div>
+
+        <div style="padding: 10px; display: flex; flex-flow: row;" (click)="$event.stopPropagation();">
+            <!--Blur field-->
+            <mat-slider class="blur_slider" type="range" min="0" max="100"  (input)="shadowData.blur = $event.value; onParamChange();" [value]="shadowData.blur"></mat-slider>
+
+            <mat-form-field class="inputField" (change)="onParamChange();" (keydown)="$event.stopPropagation()" (keyup)="onParamChange(); $event.stopPropagation()" floatLabel="never" style="width: 60px; padding-left: 10px; padding-right: 10px;">
+                <input matInput type="number" placeholder="Blur" [(ngModel)]="shadowData.blur" required>
+                <span matSuffix *ngIf="suffixData.blur">{{suffixData.blur}}</span>
+            </mat-form-field>
+            
+        </div>
+
+        <div style="padding: 5px; display: flex; flex-flow: row;" (click)="$event.stopPropagation();">
+            <!--Spread field-->
+            <mat-form-field class="inputField" (change)="onParamChange();" (keydown)="$event.stopPropagation()" (keyup)="onParamChange(); $event.stopPropagation()" floatLabel="never" style="width: 60px; padding-left: 10px; padding-right: 10px;">
+                <input matInput type="number" placeholder="Width" [(ngModel)]="shadowData.spread" required>
+                <span matSuffix *ngIf="suffixData.spread">{{suffixData.spread}}</span>
+            </mat-form-field>
+            
+            <!--Color field-->
+            <app-color-picker [colorInput]="shadowData.color" (colorOutput)="shadowData.color = $event; onParamChange();" (onEdition)="onEdition.emit($event)" style="width: 100%; justify-content: center; align-items: center; display: flex; padding-left: 10px; padding-right: 10px;"></app-color-picker>
+        </div>
+    </mat-menu>
+</div>

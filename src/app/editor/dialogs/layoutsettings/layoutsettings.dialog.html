@@ -1,0 +1,39 @@
+<div>
+    <h1 mat-dialog-title style="display:inline-block;cursor:move;" mat-dialog-draggable>Layout settings</h1>
+    <mat-icon (click)="onNoClick()" style="float:right;margin-right:-10px;margin-top:-10px;cursor:pointer;color:gray;">
+        <i class="far fa-times" style="font-size: 140%;"></i>
+    </mat-icon>
+    <mat-tab-group >
+        <mat-tab label="General">
+            <div style="display: block;">
+                <div class="my-form-field" style="display: inline-block;margin-top: 25px;">
+                
+                    <mat-form-field appearance="fill">
+                        <mat-label>Main View</mat-label>
+                        <mat-select [(ngModel)]="data.defaultViewId" name="view">
+                            <mat-option *ngFor="let view of data.views" [value]="view.id">
+                              {{view.name}}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!--<div style="margin: 8px;">
+                    <mat-checkbox [(ngModel)]="data.mainNavBtn">Show sidenav button</mat-checkbox>
+                </div>-->
+            </div>
+        </mat-tab>
+        
+        <!--<mat-tab label="Styling">
+
+
+
+        </mat-tab>-->
+    
+    </mat-tab-group>
+    
+    <div mat-dialog-actions class="dialog-action">
+        <button mat-raised-button (click)="onNoClick()">CANCEL</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>OK</button>
+    </div>
+</div>

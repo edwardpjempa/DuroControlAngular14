@@ -1,0 +1,6 @@
+<div class="main" [style.width.px]="width">
+   <div class="handler"  (mousedown)="onMouseDown($event)"  #dragger></div>
+   <div class="content">
+      <ng-content></ng-content>
+   </div>
+</div>

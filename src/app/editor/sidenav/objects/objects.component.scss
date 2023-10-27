@@ -1,0 +1,13 @@
+.component-active {
+    //background-color: rgba(48,89,175,1);  
+    //color: rgba(255,255,255,1);  
+    border-color: rgba(48,89,175,1);
+    border-width: thin;
+    border-style: solid;
+}
+
+.view-tree-node {
+    min-height: auto !important;
+    height: 40px;
+    width: auto;
+}

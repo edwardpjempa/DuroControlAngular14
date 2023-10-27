@@ -1,0 +1,4 @@
+<mat-form-field class="input" [id]="inputConfig.id" *ngIf="!inputConfig.hide" (click)="onBtnClick(inputConfig.id)" style="position: absolute;" [ngStyle]="inputConfig.style">
+    <mat-label>{{inputConfig.label}}</mat-label>
+    <input matInput [disabled]="inputConfig.disabled" [placeholder]="inputConfig.placeholder" value="">
+</mat-form-field>

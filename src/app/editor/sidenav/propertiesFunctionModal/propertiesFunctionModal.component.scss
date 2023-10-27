@@ -1,0 +1,44 @@
+#functionHelper{
+    margin-bottom: 8px;
+    width: max-content;
+    display: inline-block;
+}
+
+#additionalHelp{
+    width: max-content; 
+    display: inline-block; 
+    float: right;
+}
+
+#help{
+    white-space: break-spaces; 
+    line-height: 22px; 
+    max-height: 135px; 
+    overflow-y: auto; 
+    margin-bottom: 5px;
+}
+
+#exampleUsage{
+    margin-bottom: 3px; 
+    width: max-content; 
+    display: inline-block;
+}
+
+#anotherExample{
+    display: inline-block; 
+    float: right;
+    font-size: 13px; 
+    background-color: white;
+    border-radius: 5px; 
+    position: relative; 
+    top: 5px;
+}
+
+#example{
+    border-radius: 1px; 
+    border-color: black; 
+    border: solid; 
+    padding: 3px; 
+     min-height: 25px;
+}
+

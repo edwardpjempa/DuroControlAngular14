@@ -1,0 +1,59 @@
+<div class="input-color-backgd" style="width: inherit;">
+    <div class="input-color" matTooltip="Color Picker" [ngStyle]="{'background-color': color || 'white', 'color': getContrastYIQ(hex_)}" [matMenuTriggerFor]="colorPicker" (menuOpened)="menuIsOpened()" (menuClosed)="menuIsClosed()" style="width: inherit;">{{hex_ | uppercase}}</div>
+</div>
+<mat-menu #colorPicker="matMenu">
+    <div class=color-wrapper (click)="$event.stopPropagation();">
+
+      <app-color-palette [hue]="hue" [trackBy]="{color: hue, manualChange: manualChange}" (color)="onPltColorChange($event)" style="width: 100%;"></app-color-palette>
+    </div>
+
+    <div (click)="$event.stopPropagation();">
+        <div style="padding: 5px;"><!--mat-dialog-content-->
+            <div class="color-div-backgd" style="display: inline-block; margin-right: 10px;">
+                <div class="color-div" [ngStyle]="{'background-color': color || 'white'}" style="display: inline-block; margin-right: 10px;"></div>
+            </div>
+            <div style="display: inline-block; padding-top: 5px; padding-bottom: 5px;">
+                <div style="display: grid;">
+                    <app-color-slider [hue]="hue" (color)="onSliColorChange($event)"  style="float:right; width: 100%; "></app-color-slider>
+                    <app-transp-slider [color]="hue" (transparency)="onSliTranspChange($event)"  style="float:right; width: 100%; "></app-transp-slider>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="input-wrapper" (click)="$event.stopPropagation();">
+
+        <div style="display: flex; margin-right: 10px; vertical-align: middle;">
+            <!--hex-->
+            <mat-form-field class="inputField"  (change)="hexChange($event)" (keydown)="$event.stopPropagation()" *ngIf="colorFieldType === 'hex'" style="width: 120px; text-align: center;">
+                <mat-label>HEX</mat-label><!--floatLabel="never"-->
+                <input matInput placeholder="HEX" [(ngModel)]="hex_" spellcheck="false" autocapitalize="true" required>
+            </mat-form-field>
+
+            <!--rgba-->
+            <mat-form-field class="inputField" (change)="Rchange($event)" (keydown)="$event.stopPropagation()" style="width: 38px; padding-right: 7px; text-align: center;" *ngIf="colorFieldType === 'rgb'">
+                <mat-label>R</mat-label><!--floatLabel="never"-->
+                <input numberOnly type="number" matInput placeholder="R" [(ngModel)]="r" required>
+            </mat-form-field>
+            <mat-form-field class="inputField" (change)="Gchange($event)"(keydown)="$event.stopPropagation()" style="width: 38px; padding-right: 7px; text-align: center;" *ngIf="colorFieldType === 'rgb'">
+                <mat-label>G</mat-label>
+                <input numberOnly type="number" matInput placeholder="G" [(ngModel)]="g" required>
+            </mat-form-field>
+            <mat-form-field class="inputField" (change)="Bchange($event)" (keydown)="$event.stopPropagation()" style="width: 38px; padding-right: 7px; text-align: center;" *ngIf="colorFieldType === 'rgb'">
+                <mat-label>B</mat-label>
+                <input numberOnly type="number" matInput placeholder="B" [(ngModel)]="b" required>
+            </mat-form-field>
+            <mat-form-field class="inputField"  (change)="Achange($event)" (keydown)="$event.stopPropagation()" style="width: 42px; text-align: center;" *ngIf="colorFieldType === 'rgb'"><!--padding-right: 10px;-->
+                <mat-label>A</mat-label>
+                <input numberOnly type="number" matInput step="0.01" placeholder="A" [(ngModel)]="a" required>
+            </mat-form-field>
+        </div>
+        <div >
+            <div>
+                <i class="fal fa-caret-up" (click)="fieldType()"></i>
+            </div>
+            <div>
+                <i class="fal fa-caret-down" (click)="fieldType()"></i>
+            </div>
+        </div>
+    </div>
+</mat-menu>

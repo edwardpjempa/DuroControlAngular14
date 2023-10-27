@@ -1,0 +1,91 @@
+<form novalidate (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+    <h3>Custom Tag</h3>
+    <div formArrayName="childrens" *ngFor="let children of formGroup.get('childrens').controls; let i = index;">
+        <div [formGroupName]="i" [style.marginLeft.px]="children.value.levelChildren * 15" class="grid-form">
+            <div class="form-children">
+                <label class="col-md-2 control-label" [attr.for]="'name' + i">
+                    Name
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name" />
+                </div>
+            </div>
+            <div class="form-children">
+                <label class="col-md-2 control-label" [attr.for]="'arraydim' + i">
+                    Array Dimension
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" [attr.id]="'arraydim' + i" type="number" formControlName="arraydim" />
+                </div>
+            </div>
+            <div class="form-children">
+                <label [attr.for]="'datatype' + i">
+                    Data Type
+                </label>
+                <div class="col-md-8">
+                    <select class="form-control" [attr.id]="'datatype' + i" formControlName="datatype" name="datatype"
+                        id="datatype">
+                        <option value="" disabled selected>Select type</option>
+                        <option>String</option>
+                        <option>Number</option>
+                        <option>Folder</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-children" *ngIf="children.value.datatype == 'Number'">
+                <label class="col-md-2 control-label" [attr.for]="'value' + i">Value
+                    <i class="fas fa-tags" (click)="setTag('select-tag', i)"></i>
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" [attr.id]="'value' + i" type="number" formControlName="value" />
+                </div>
+            </div>
+            <div class="form-children" *ngIf="children.value.datatype == 'String'">
+                <label class="col-md-2 control-label" [attr.for]="'value' + i">Value
+                    <i class="fas fa-tags" (click)="setTag('select-tag', i)"></i>
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" [attr.id]="'value' + i" type="text" formControlName="value" />
+                </div>
+            </div>
+            <div class="form-checkboxes"
+                *ngIf="children.value.datatype == 'String' || children.value.datatype == 'Number'">
+                <div formGroupName="config">
+                    <input class="checkbox" type="checkbox" formControlName="persistent" /><label>Persistent</label>
+                    <input class="checkbox" type="checkbox" formControlName="history" /><label>History</label>
+                </div>
+            </div>
+            <div *ngIf="children.value.datatype == 'String' || children.value.datatype == 'Number'">
+                <div class="form-children" formGroupName="config">
+                    <label class="col-md-2 control-label" [attr.for]="'value' + i">Alias
+                    </label>
+                    <div>
+                        <input class="form-control" readonly type="text" formControlName="alias">
+                    </div>
+                </div>
+            </div>
+            <div class="form-children" *ngIf="children.value.datatype == 'Folder'">
+                <div class="col-md-10">
+                    <button type="button" class="btn" (click)="addChildren(i, true)">Add</button>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <div class="col-md-10">
+                    <button type="button" class="" (click)="removeChildren(i)">Remove</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <button type="submit" class="btn">
+        Submit
+    </button>
+</form>
+<app-modal id="select-tag" [margin]="'20vh 15vw'">
+    <h3>Select a tag that will be assigned to this field</h3>
+    <app-tags-table [headers]="['Name', 'Value']" [data]="data" [tagbase]="LocalIO" [databasePath]="true">
+    </app-tags-table>
+    <div class="btn-group">
+        <button class="btn" (click)="closeModal('select-tag');">Cancel</button>
+        <button class="btn" (click)="selectTag('select-tag')">Ok</button>
+    </div>
+</app-modal>

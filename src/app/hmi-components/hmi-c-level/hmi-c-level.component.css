@@ -1,0 +1,29 @@
+.level-bar {
+   /* height: 100%; */
+   width: 100%;
+   background-color: #27884b;
+   position: absolute;
+   z-index: 0;
+}
+
+.oval {
+   margin-bottom: -5px;
+   width: 100%;
+   height: 10px;
+   background: #13502c;
+   border-radius: 50%;
+   z-index: 3;
+   position: absolute;
+   filter: brightness(0.8); /* This makes the color darker without the need to specify another color" */
+ }
+ 
+ .bot-oval {
+   margin-bottom: -5px;
+   width: 100%;
+   height: 10px;
+   background: #27884b;
+   border-radius: 50%;
+   z-index: 2;
+   position: absolute;
+ }
+

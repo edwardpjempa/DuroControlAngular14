@@ -1,0 +1,28 @@
+<button mat-button #menuTrigger='matMenuTrigger' [matMenuTriggerFor]="commands"></button>
+<mat-menu #commands="matMenu"> 
+    <button class="menu-button" mat-menu-item [matMenuTriggerFor]="getTag">Get Tag</button>
+    <mat-divider></mat-divider>
+    <button class="menu-button" (click)="clickMenuItem('definition')" mat-menu-item>Go to Definition</button>
+    <button class="menu-button" mat-menu-item [matMenuTriggerFor]="getFunctions">Add Function</button>
+    <mat-divider></mat-divider>
+    <button class="menu-button" (click)="clickMenuItem('cut')" mat-menu-item>Cut</button>
+    <button class="menu-button" (click)="clickMenuItem('copy')" mat-menu-item>Copy</button>
+    <button class="menu-button" (click)="clickMenuItem('paste')" mat-menu-item>Paste</button>
+</mat-menu>
+
+<mat-menu  style="height:30px"  #getTag="matMenu" backdropClass="context-menu">
+    <div mat-menu-item (click)="$event.stopPropagation()">
+        <mat-form-field  style="height:30px; width: auto;">
+        <input type="text" matInput placeholder="Search Tag" [formControl]="tagSelectorControl" [matAutocomplete]="auto">
+        <mat-autocomplete [panelWidth]="'matAutocomplete'" #auto="matAutocomplete">
+            <mat-option class="menu-option" *ngFor="let child of filteredOptions | async" [value]="child">{{child}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+</mat-menu>
+
+<mat-menu  style="height:30px"  #getFunctions="matMenu" backdropClass="context-menu">
+    <button mat-menu-item (click)="addFunc('Background Color', 'if')" *ngIf="property == 'Background Color'">if(<h5 style="display: inline-block;">conditional, hexColor: Text, hexColor: Text</h5>)</button>
+    <button mat-menu-item (click)="addFunc('','')" *ngIf="property == 'click'">write</button>
+    <button mat-menu-item *ngIf="property == 'lo'">Item 2</button>
+</mat-menu>

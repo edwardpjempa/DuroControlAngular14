@@ -1,0 +1,30 @@
+<table *ngIf="headers">
+   <tr>
+      <td width="36px"></td>
+      <th>Name</th>
+      <th width="100px">Data Type</th>
+      <th width="60px">Dim</th>      
+      <th >Default Value</th>
+      <th>Description</th>
+      <th width="36px">
+         P
+      </th>
+      <th width="36px">
+         H
+      </th>
+      <th width="100px">DeadBand</th>
+   </tr>
+</table>
+<app-tree-table-row *ngFor="let objName of Object.keys(data)" 
+[dbRowData]="data[objName]"  
+(clicked)="cellClicked($event)" 
+[dbRowName]="objName" 
+[gap]="[objName]" 
+[dbRowFullName]="objName"
+[dbRowValue]=""
+ (checkbox)="checkSelected($event)" 
+ [selectedTag]="selectedTag"
+ (tagrenamed)="renameTag($event)"
+ id="iddd"
+ [list]="list"
+ ></app-tree-table-row>

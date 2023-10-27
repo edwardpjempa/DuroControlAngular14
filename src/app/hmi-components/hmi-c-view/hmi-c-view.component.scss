@@ -1,0 +1,57 @@
+.main-div {
+   width: 100%;
+   height: 100%;
+}
+ .component {
+   position: absolute;
+}
+
+.app-hmi-c-button {
+   max-height: -webkit-fill-available;
+   max-width: -webkit-fill-available;
+}
+.app-hmi-c-image {
+   max-height: -webkit-fill-available;
+   max-width: -webkit-fill-available;
+}
+.app-hmi-c-label {
+   max-height: -webkit-fill-available;
+   max-width: -webkit-fill-available;
+}
+.app-hmi-c-level {
+   max-height: -webkit-fill-available;
+   max-width: -webkit-fill-available;
+}
+.app-hmi-c-view {
+   //max-height: -webkit-fill-available;
+   //max-width: -webkit-fill-available;
+
+   width: 100%;
+   height: 100%;
+
+   position: absolute;
+}
+
+.app-hmi-c-numeric-input {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.app-hmi-c-keyboard {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.app-hmi-c-rfid {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.app-hmi-c-camera {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
