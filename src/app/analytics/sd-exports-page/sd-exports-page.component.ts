@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyMenu as MatMenu, MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { HttpClient, HttpResponse, HttpEventType, HttpHeaderResponse, HttpErrorResponse } from '@angular/common/http';
 import { Subscription, interval } from 'rxjs';
 import { first, catchError } from 'rxjs/operators';

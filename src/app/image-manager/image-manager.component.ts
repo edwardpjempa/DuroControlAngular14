@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MainNavComponent } from './../main-nav/main-nav.component';
 import { HttpClient } from '@angular/common/http';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { environment } from 'src/environments/environment';
 
 import { Utils } from './../editor/helpers/utils'

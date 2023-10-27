@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { EipModule , EipModule2, EipModule3} from '../classes/modules/eip-module';
 import { ModbusTcpIpModule } from '../classes/modules/modbus-tcp-ip-module';

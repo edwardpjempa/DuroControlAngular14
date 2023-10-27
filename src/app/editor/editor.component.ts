@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, HostListener, ElementRef, View
 import { Subscription, fromEvent, Subject } from "rxjs";
 import { MainNavComponent } from './../main-nav/main-nav.component';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
 import { Utils } from './helpers/utils'

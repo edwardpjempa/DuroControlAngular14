@@ -1,13 +1,13 @@
 
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef, LegacySimpleSnackBar as SimpleSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { Subscription, fromEvent } from 'rxjs';
 import { UserModuleService, UserModuleStatus } from '../user-module.service';
 import { ConfigDataService } from '../config-data.service';
 import { DbDataService } from '../db-data.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { filter, take } from 'rxjs/operators';

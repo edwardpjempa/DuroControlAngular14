@@ -6,7 +6,7 @@ import { ConfigDataService } from '../config-data.service';
 import { MatSidenav} from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs/internal/observable/throwError'; 
 import { AboutComponent } from '../about/about.component';

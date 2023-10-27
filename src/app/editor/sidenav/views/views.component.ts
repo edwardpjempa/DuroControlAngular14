@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation, HostListener } from "@angular/core";
 import { MatTreeFlatDataSource, MatTreeFlattener } from "@angular/material/tree";
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { FlatTreeControl } from "@angular/cdk/tree";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { cloneDeep } from 'lodash';
