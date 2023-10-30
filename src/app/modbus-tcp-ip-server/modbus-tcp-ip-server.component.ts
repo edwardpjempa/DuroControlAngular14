@@ -2,8 +2,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Overlay } from '@angular/cdk/overlay';
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacyRow as MatRow } from '@angular/material/legacy-table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatRow } from '@angular/material/table';
 import { Subject } from 'rxjs';
 import { ModbusMappingDialogComponent } from '../components/modbus-mapping-dialog/modbus-mapping-dialog.component'
 import { ResizeObserver } from '@juggle/resize-observer';

@@ -52,7 +52,7 @@
                     <div style="padding: 10px; display: flex;" (click)="$event.stopPropagation();">
                         <mat-form-field style="width: auto;" class="DinputField_prop" (click)="$event.stopPropagation();" (change)="onParamChange(element);"  (keyup)="onParamChange(element);" *ngIf="element.formType === 'input'" 
                             floatLabel="never" style="line-height: 22px; width:230px;">
-                            <textarea  matInput matTextareaAutosize [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
+                            <textarea  matInput [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
                             <span matSuffix *ngIf="element.suffix">{{element.suffix}}</span>
                         </mat-form-field> 
                     </div>
@@ -398,7 +398,7 @@
                     <div style="padding: 10px; display: flex;" (click)="$event.stopPropagation();">
                         <mat-form-field style="width: auto;" class="DinputField_prop" (click)="$event.stopPropagation();" (change)="onParamChange(element);" (keyup)="onParamChange(element);" *ngIf="element.formType === 'input'" 
                             floatLabel="never" style="line-height: 22px; width:230px;">
-                            <textarea  matInput matTextareaAutosize [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
+                            <textarea  matInput [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
                             <span matSuffix *ngIf="element.suffix">{{element.suffix}}</span>
                         </mat-form-field> 
                     </div>
@@ -539,7 +539,7 @@
                     <div style="padding: 10px; display: flex;" (click)="$event.stopPropagation();">
                         <mat-form-field style="width: auto;" class="DinputField_prop" (click)="$event.stopPropagation();" (change)="onParamChange(element);" (keyup)="onParamChange(element);" *ngIf="element.formType === 'input'" 
                             floatLabel="never" style="line-height: 22px; width:230px;">
-                            <textarea  matInput matTextareaAutosize [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
+                            <textarea  matInput [type]="element.dataType" [placeholder]="element.placeholder" [matTooltip]="element.placeholder" (blur)="onEdit(false,false);" (focus)="onEdit(true,false);" [(ngModel)]="element.data"></textarea>
                             <span matSuffix *ngIf="element.suffix">{{element.suffix}}</span>
                         </mat-form-field> 
                     </div>

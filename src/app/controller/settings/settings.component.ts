@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { first } from 'rxjs/operators';
 import { settingsTags } from 'src/app/controller/settings/settings.service';
 import { ConfirmDialogComponent } from '../confirm/confirm.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-settings',

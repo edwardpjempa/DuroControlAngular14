@@ -163,7 +163,7 @@
                                         [style.top.px]='selection.y' [style.left.px]='selection.x' [style.width.px]='eservice.selectionDimen(selection,"width", configDataService.hmi)' 
                                         [style.height.px]='eservice.selectionDimen(selection,"height", configDataService.hmi)' [class.hovered]="selection.hovered" 
                                         (mousedown)='onComponentSelection($event); clickdown($event, zoomVal);' (mouseover)="onMouseOver($event)" cdkDrag (cdkDragStarted)="dragStarted($event,i)" 
-                                        [cdkDragConstrainPosition]="dragConstrainPoint" (cdkDragEnded)="dragEnded($event,i)" (cdkDragMoved)="onDragging($event,i)">
+                                        (cdkDragEnded)="dragEnded($event,i)" (cdkDragMoved)="onDragging($event,i)">
                             
                                         <div style="height: 100%; width: 100%;" [style.transform]="'rotate('+selection.rotationAngle+'deg)'">
                                             <div class='resizers' (mouseout)="onMouseOut($event)" >

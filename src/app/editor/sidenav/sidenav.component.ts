@@ -7,7 +7,7 @@ import { EditorComponent } from './../editor.component';
 import { EditorService } from './../service/editor.service';
 import { HMIComponents } from './../../models/components';
 import { HistoryService } from './../history/history.service'
-import { MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog"; 
+import { MatDialog } from "@angular/material/dialog"; 
 import { Editor_SidenavDialogProperties } from "./propertiesDialog/propertiesDialog.component";
 
 

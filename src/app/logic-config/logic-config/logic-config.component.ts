@@ -1,16 +1,16 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
+import {  MatTabGroup } from '@angular/material/tabs';
 import { fromEvent, Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { ConfigDataService } from '../../config-data.service';
-import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef, LegacySimpleSnackBar as SimpleSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { EditorContextMenuComponent } from '../../components/editor-context-menu/editor-context-menu.component'
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { UserModuleService, UserModuleStatus } from 'src/app/user-module.service';
 import { DbDataService } from 'src/app/db-data.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { PopupComponent } from '../../components/popup/popup.component';
 import {ActivatedRoute} from '@angular/router';
 
